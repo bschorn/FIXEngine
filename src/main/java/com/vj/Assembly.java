@@ -24,9 +24,7 @@ import com.vj.transform.attribute.NoAttributeTransform;
 import com.vj.transform.attribute.OrderStateTransform;
 import com.vj.transform.attribute.OrderTypeTransform;
 import com.vj.transform.attribute.SideTransform;
-import com.vj.transform.entity.NewOrderSingleTransform;
-import com.vj.transform.entity.EquityStateTransform;
-import com.vj.transform.entity.NoEntityTransform;
+import com.vj.transform.entity.*;
 import com.vj.transform.identifier.ClientTransform;
 import com.vj.transform.identifier.NoIdentifierTransform;
 import com.vj.validator.Validators;
@@ -35,6 +33,7 @@ import com.vj.validator.order.equity.OrderCancelReplaceRequestValidator;
 import quickfix.fix44.ExecutionReport;
 import quickfix.fix44.NewOrderSingle;
 import quickfix.fix44.OrderCancelReplaceRequest;
+import quickfix.fix44.OrderCancelRequest;
 
 public class Assembly {
 
@@ -71,7 +70,9 @@ public class Assembly {
         transformers.register(Side.class, new SideTransform());
         transformers.register(InstrumentSource.class, new InstrumentSourceTransform());
         transformers.register(Client.class, new ClientTransform());
-        transformers.register(EquityOrder.class, new NewOrderSingleTransform(services, transformers));
+        transformers.register(NewOrderSingle.class, new NewOrderSingleTransform(services, transformers));
+        transformers.register(OrderCancelRequest.class, new OrderCancelRequestTransform(services, transformers));
+        transformers.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestTransform(services, transformers));
         transformers.register(ExecutionReport.class, new EquityStateTransform(services, transformers));
         validators.register(NewOrderSingle.class, new NewOrderSingleValidator());
         validators.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestValidator());
@@ -90,9 +91,9 @@ public class Assembly {
         INSTANCE.handlers.register(new OrderReplacedHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
         INSTANCE.handlers.register(new OrderPendingHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
         INSTANCE.handlers.register(new OrderDefaultHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.orderPublishers.register(new NewOrderSinglePublisher(INSTANCE.transformers.entity(EquityOrder.class)));
-        INSTANCE.orderPublishers.register(new OrderCancelRequestPublisher(INSTANCE.transformers.entity(EquityOrder.class)));
-        INSTANCE.orderPublishers.register(new OrderCancelReplaceRequestPublisher(INSTANCE.transformers.entity(EquityOrder.class)));
+        INSTANCE.orderPublishers.register(new NewOrderSinglePublisher(INSTANCE.transformers.entity(NewOrderSingle.class)));
+        INSTANCE.orderPublishers.register(new OrderCancelRequestPublisher(INSTANCE.transformers.entity(OrderCancelRequest.class)));
+        INSTANCE.orderPublishers.register(new OrderCancelReplaceRequestPublisher(INSTANCE.transformers.entity(OrderCancelReplaceRequest.class)));
     }
 
     public static Services services() {

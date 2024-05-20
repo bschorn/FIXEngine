@@ -77,9 +77,7 @@ public class BuySide {
 
     public static void main(String[] args) throws Exception {
         try {
-            if (args.length == 0) {
-                args = new String[]{"src/main/resources/buyside.cfg"};
-            }
+            new LogConfig(BuySide.class);
             InputStream inputStream = getSettingsInputStream(args);
             SessionSettings settings = new SessionSettings(inputStream);
             inputStream.close();
@@ -100,15 +98,14 @@ public class BuySide {
     private static InputStream getSettingsInputStream(String[] args) throws FileNotFoundException {
         InputStream inputStream = null;
         if (args.length == 0) {
-            inputStream = SellSide.class.getResourceAsStream("buyside.cfg");
+            inputStream = SellSide.class.getResourceAsStream(System.getProperty("settings.resource"));
         } else if (args.length == 1) {
             inputStream = new FileInputStream(args[0]);
         }
         if (inputStream == null) {
-            System.out.println("usage: " + SellSide.class.getName() + " [configFile].");
+            System.err.println("usage: " + SellSide.class.getName() + " [configFile].");
             System.exit(1);
         }
         return inputStream;
     }
-
 }

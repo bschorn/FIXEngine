@@ -1,0 +1,26 @@
+INFO    2024-05-20 18:27:30,042 [main] com.vj.LogConfig  - LogConfig log configuration initialized.
+INFO    2024-05-20 18:27:30,802 [main] com.vj.BuySide  - Acceptor registered with JMX, name=org.quickfixj:type=Connector,role=Initiator,id=1
+INFO    2024-05-20 18:27:31,202 [main] quickfix.DefaultSessionSchedule  - [FIX.4.4:VJAPP->JPM] daily, 00:00:00-UTC - 00:00:00-UTC
+INFO    2024-05-20 18:27:31,282 [main] quickfix.mina.NetworkingOptions  - Socket option: SocketTcpNoDelay=true
+INFO    2024-05-20 18:27:31,282 [main] quickfix.mina.NetworkingOptions  - Socket option: SocketSynchronousWrites=false
+INFO    2024-05-20 18:27:31,282 [main] quickfix.mina.NetworkingOptions  - Socket option: SocketSynchronousWriteTimeout=30000
+INFO    2024-05-20 18:27:31,724 [main] quickfix.SocketInitiator  - SessionTimer started
+INFO    2024-05-20 18:27:31,726 [QFJ Message Processor] quickfix.SocketInitiator  - Started QFJ Message Processor
+DEBUG   2024-05-20 18:27:33,524 [NioProcessor-2] org.apache.mina.filter.codec.ProtocolCodecFilter  - Processing a MESSAGE_RECEIVED for session 1
+DEBUG   2024-05-20 18:27:33,534 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - detected header: pos=0,lim=85,rem=85,offset=0,state=1
+DEBUG   2024-05-20 18:27:33,534 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - body length = 63: pos=0,lim=85,rem=85,offset=15,state=3
+DEBUG   2024-05-20 18:27:33,534 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - message body found: pos=0,lim=85,rem=85,offset=78,state=4
+DEBUG   2024-05-20 18:27:33,534 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - found checksum: pos=0,lim=85,rem=85,offset=78,state=4
+DEBUG   2024-05-20 18:27:33,534 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - parsed message: pos=85,lim=85,rem=0,offset=85,state=4 8=FIX.4.49=6335=A34=149=JPM52=20240520-22:27:33.47456=VJAPP98=0108=6010=107
+DEBUG   2024-05-20 18:28:33,740 [NioProcessor-2] org.apache.mina.filter.codec.ProtocolCodecFilter  - Processing a MESSAGE_RECEIVED for session 1
+DEBUG   2024-05-20 18:28:33,740 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - detected header: pos=0,lim=73,rem=73,offset=0,state=1
+DEBUG   2024-05-20 18:28:33,740 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - body length = 51: pos=0,lim=73,rem=73,offset=15,state=3
+DEBUG   2024-05-20 18:28:33,740 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - message body found: pos=0,lim=73,rem=73,offset=66,state=4
+DEBUG   2024-05-20 18:28:33,740 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - found checksum: pos=0,lim=73,rem=73,offset=66,state=4
+DEBUG   2024-05-20 18:28:33,740 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - parsed message: pos=73,lim=73,rem=0,offset=73,state=4 8=FIX.4.49=5135=034=249=JPM52=20240520-22:28:33.74056=VJAPP10=057
+DEBUG   2024-05-20 18:29:33,740 [NioProcessor-2] org.apache.mina.filter.codec.ProtocolCodecFilter  - Processing a MESSAGE_RECEIVED for session 1
+DEBUG   2024-05-20 18:29:33,741 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - detected header: pos=0,lim=73,rem=73,offset=0,state=1
+DEBUG   2024-05-20 18:29:33,741 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - body length = 51: pos=0,lim=73,rem=73,offset=15,state=3
+DEBUG   2024-05-20 18:29:33,741 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - message body found: pos=0,lim=73,rem=73,offset=66,state=4
+DEBUG   2024-05-20 18:29:33,742 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - found checksum: pos=0,lim=73,rem=73,offset=66,state=4
+DEBUG   2024-05-20 18:29:33,742 [NioProcessor-2] quickfix.mina.message.FIXMessageDecoder  - parsed message: pos=73,lim=73,rem=0,offset=73,state=4 8=FIX.4.49=5135=034=349=JPM52=20240520-22:29:33.73656=VJAPP10=064
