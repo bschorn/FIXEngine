@@ -1,0 +1,122 @@
+
+Instructions for building your own quickfixj libraries.
+
+
+https://github.com/quickfix-j/quickfixj/tree/QFJ_2_3_x
+download quickfixj-QFJ_2_3_x.zip
+extract quickfixj-QFJ_2_3_x.zip
+cd quickfixj-QFJ_2_3_x/quickfixj-QFJ_2_3_x
+mvn clean install -Dmaven.javadoc.skip=true -DskipTests -PskipBundlePlugin
+
+Use JDK 8 (possibly 11)
+open quickfixj-QFJ_2_3_x/quickfixj-QFJ_2_3_x in IntelliJ
+
+./pom.xml
+	<modules>
+		<module>quickfixj-codegenerator</module>
+		<!--module>quickfixj-dictgenerator</module-->
+		<module>quickfixj-core</module>
+		<module>quickfixj-messages</module>
+		<!--module>quickfixj-examples</module-->
+		<!--module>quickfixj-all</module-->
+		<module>quickfixj-distribution</module>
+	</modules>
+
+./quickfixj-messages/pom.xml
+	<modules>
+		<!--module>quickfixj-messages-fix40</module-->
+		<!--module>quickfixj-messages-fix41</module-->
+		<!--module>quickfixj-messages-fix42</module-->
+		<!--module>quickfixj-messages-fix43</module-->
+		<module>quickfixj-messages-fix44</module>
+		<!--module>quickfixj-messages-fix50</module-->
+		<!--module>quickfixj-messages-fix50sp1</module-->
+		<!--module>quickfixj-messages-fix50sp2</module-->
+		<!--module>quickfixj-messages-fixt11</module-->
+		<!--module>quickfixj-messages-all</module-->
+	</modules>
+
+./quickfixj-distribution/src/main/assembly/distribution.xml
+			<unpackOptions>
+				<includes>
+					<!--include>**/FIX*.xml</include-->
+					<include>**/fixapi.msg44.xml</include>
+				</includes>
+			</unpackOptions>
+
+./quickfixj-core/pom.xml
+    <properties>
+        <acceptance.tests>**/AcceptanceTestSuite.java</acceptance.tests>
+        <mainClass>org.quickfixj.Version</mainClass>
+        <generator.decimal>false</generator.decimal>
+    </properties>
+
+
+        <resources>
+            <!--resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fixt11/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix50sp2/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix50sp1/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix50/src/main/resources</directory>
+            </resource-->
+            <resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix44/src/main/resources</directory>
+            </resource>
+            <!--resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix43/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix42/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix41/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix40/src/main/resources</directory>
+            </resource-->
+        </resources>
+
+        <!--testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fixt11/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix50sp2/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix50sp1/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix50/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix44/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix43/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix42/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix41/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>../quickfixj-messages/quickfixj-messages-fix40/src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>src/main/resources</directory>
+            </testResource>
+        </testResources-->
+
+
+
