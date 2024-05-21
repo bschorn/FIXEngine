@@ -5,12 +5,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f43777a-64e8-419a-8126-09f2223d0cec" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/buyside/FIX.4.4-VJAPP-JPM.body" beforeDir="false" afterPath="$PROJECT_DIR$/data/buyside/FIX.4.4-VJAPP-JPM.body" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/buyside/FIX.4.4-VJAPP-JPM.header" beforeDir="false" afterPath="$PROJECT_DIR$/data/buyside/FIX.4.4-VJAPP-JPM.header" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/buyside/FIX.4.4-VJAPP-JPM.senderseqnums" beforeDir="false" afterPath="$PROJECT_DIR$/data/buyside/FIX.4.4-VJAPP-JPM.senderseqnums" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/buyside/FIX.4.4-VJAPP-JPM.targetseqnums" beforeDir="false" afterPath="$PROJECT_DIR$/data/buyside/FIX.4.4-VJAPP-JPM.targetseqnums" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/sellside/FIX.4.4-JPM-VJAPP.body" beforeDir="false" afterPath="$PROJECT_DIR$/data/sellside/FIX.4.4-JPM-VJAPP.body" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/sellside/FIX.4.4-JPM-VJAPP.header" beforeDir="false" afterPath="$PROJECT_DIR$/data/sellside/FIX.4.4-JPM-VJAPP.header" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/sellside/FIX.4.4-JPM-VJAPP.senderseqnums" beforeDir="false" afterPath="$PROJECT_DIR$/data/sellside/FIX.4.4-JPM-VJAPP.senderseqnums" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/sellside/FIX.4.4-JPM-VJAPP.targetseqnums" beforeDir="false" afterPath="$PROJECT_DIR$/data/sellside/FIX.4.4-JPM-VJAPP.targetseqnums" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/BuySide.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/BuySide.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/SellSide.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/SellSide.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/Assembly.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/Assembly.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/BuySide.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/BuySide.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/SellSide.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/SellSide.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/handler/MessageHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/MessageHandlers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/handler/MessageHandlers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/DoneDayHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/ExecutionReportHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/buyside/ExecutionReportHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderAcceptedHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderCanceledHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderDefaultHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/buyside/OrderDefaultHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderFilledHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/buyside/OrderTradeHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderPartialFillHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderPendingCancelHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderPendingHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderPendingReplaceHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderRejectedHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/handler/order/OrderReplacedHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/mock/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/mock/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/model/attribute/OrderAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/model/attribute/OrderAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/model/attribute/OrderState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/model/attribute/OrderState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/model/entity/EquityOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/model/entity/EquityOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/publisher/NewOrderSinglePublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/publisher/NewOrderSinglePublisher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/publisher/OrderCancelReplaceRequestPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/publisher/OrderCancelReplaceRequestPublisher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/resources/sellside.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/sellside.cfg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/publisher/OrderCancelRequestPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/publisher/OrderCancelRequestPublisher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/publisher/OrderPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/publisher/OrderPublisher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/attribute/OrderStateTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/attribute/OrderStateTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/EntityTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/EntityTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/EquityStateTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/EquityStateTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/NewOrderSingleTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/NewOrderSingleTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/NoEntityTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/NoEntityTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/OrderCancelReplaceRequestTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/OrderCancelReplaceRequestTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/OrderCancelRequestTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/entity/OrderCancelRequestTransform.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +93,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/resources" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/vj/handler/order/sellside" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -66,17 +102,20 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\main\java\com\vj\handler\order\sellside" />
+      <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\main\java\com\vj\handler\order\equity" />
       <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\resources" />
       <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\main\java\com\vj\handler\order" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.vj.mock" />
       <recent name="com.vj.model.attribute" />
       <recent name="com.vj.publisher" />
       <recent name="com.vj.transform.entity" />
       <recent name="com.vj.handler" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.BuySide">
+  <component name="RunManager" selected="Application.SellSide">
     <configuration name="BuySide" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="11" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -106,6 +145,7 @@
       <option name="MAIN_CLASS_NAME" value="com.vj.SellSide" />
       <module name="vfixeng" />
       <option name="PROGRAM_PARAMETERS" value="src/resources/sellside.cfg" />
+      <option name="VM_PARAMETERS" value="-Dsellside=1" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -129,32 +169,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1716080342098</updated>
-      <workItem from="1716080342100" duration="38651000" />
+      <workItem from="1716080342100" duration="45444000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/vj/SellSide.java</url>
-          <line>132</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/vj/SellSide.java</url>
-          <line>127</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/vj/SellSide.java</url>
-          <line>145</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

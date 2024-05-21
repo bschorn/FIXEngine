@@ -215,9 +215,9 @@ public class EquityOrder implements Order {
             data.orderId = orderId;
             data.client = client;
             data.version = OrderVersion.initial();
-            data.clientOrderId = new ClientOrderId(String.valueOf(orderId) + "-" + String.valueOf(data.version));
+            data.clientOrderId = new ClientOrderId(data.orderId, data.version);
             data.origClientOrderId = data.clientOrderId;
-            data.orderState = OrderState.CREATED;
+            data.orderState = OrderState.OPEN_REQ;
             data.orderAction = OrderAction.OPEN;
         }
         public OrderCreator instrument(Instrument value) {

@@ -6,14 +6,12 @@ import quickfix.SessionID;
 
 
 public interface EntityTransform<T extends quickfix.Message,R>  {
-    R inbound(T message, SessionID sessionID) throws FieldNotFound;
+    R inbound(T message, SessionID sessionID, Object...objects) throws FieldNotFound;
     T outbound(R r);
 
     class Unimplemented implements EntityTransform<quickfix.Message,Object> {
-
-
         @Override
-        public Object inbound(Message message, SessionID sessionID) {
+        public Object inbound(Message message, SessionID sessionID, Object...objects) {
             return null;
         }
 

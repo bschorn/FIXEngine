@@ -44,6 +44,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void modify(Order order) {
+        LinkedList<Order> orderHistory = orderLogMap.get(order.id());
+        orderHistory.add(order);
+        publisherMap.get(order.getClass()).publish(order);
+    }
+
+    @Override
     public void update(Order order) {
         LinkedList<Order> orderHistory = orderLogMap.get(order.id());
         orderHistory.add(order);

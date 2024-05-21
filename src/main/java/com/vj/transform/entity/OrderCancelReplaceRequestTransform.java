@@ -10,6 +10,7 @@ import com.vj.transform.attribute.InstrumentSourceTransform;
 import com.vj.transform.attribute.OrderTypeTransform;
 import com.vj.transform.attribute.SideTransform;
 import com.vj.transform.attribute.TradeDateTransform;
+import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.field.ClOrdID;
 import quickfix.field.TransactTime;
@@ -39,7 +40,7 @@ public class OrderCancelReplaceRequestTransform implements EntityTransform<Order
      * Sell-Side
      */
     @Override
-    public EquityOrder inbound(OrderCancelReplaceRequest newOrderSingle, SessionID sessionID) {
+    public EquityOrder inbound(OrderCancelReplaceRequest newOrderSingle, SessionID sessionID, Object... objects) throws FieldNotFound {
         throw new UnsupportedOperationException(OrderCancelReplaceRequestTransform.class.getSimpleName() + ".inbound(...)");
     }
 

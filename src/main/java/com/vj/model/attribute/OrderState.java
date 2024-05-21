@@ -1,18 +1,21 @@
 package com.vj.model.attribute;
 
 public enum OrderState implements Attribute<Integer> {
-    CREATED,
-    SENT,
-    PENDING,
-    OPEN,
-    REJECTED,
-    PARTIAL,
-    FILLED,
-    CANCEL_REQUEST,
+    OPEN_REQ,
+    OPEN_SENT,
+    OPEN_PEND, // PendingNew
+    OPEN, // New
+    REJECTED, // Rejected
+    PARTIAL, // PartiallyFilled
+    FILLED, // Filled
+    CANCEL_REQ,
     CANCEL_SENT,
-    CANCEL_PENDING,
-    CANCELED,
-    CANCEL_REJECTED;
+    CANCEL_PEND, // PendingCancel
+    CANCELED, // Canceled
+    REPLACE_REQ,
+    REPLACE_SENT,
+    REPLACE_PEND, // PendingReplace
+    UNKNOWN;
 
     @Override
     public Integer asValue() {

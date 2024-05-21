@@ -6,7 +6,7 @@ import quickfix.SessionID;
 
 public class NoEntityTransform implements EntityTransform<Message,EquityOrder>{
     @Override
-    public EquityOrder inbound(Message message, SessionID sessionID) {
+    public EquityOrder inbound(Message message, SessionID sessionID, Object...objects) {
         throw new UnsupportedOperationException();
     }
 

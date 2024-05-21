@@ -4,7 +4,6 @@ public enum OrderAction implements Attribute<Integer> {
     OPEN,
     REPLACE,
     CANCEL,
-    FILL,
     NONE;
 
     @Override

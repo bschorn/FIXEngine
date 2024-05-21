@@ -1,4 +1,4 @@
-package com.vj.handler.order;
+package com.vj.handler.order.buyside;
 
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
@@ -10,17 +10,17 @@ import quickfix.field.ExecType;
 import quickfix.fix44.ExecutionReport;
 
 
-public class OrderReplacedHandler extends ExecutionReportHandler {
+public class OrderTradeHandler extends ExecutionReportHandler {
 
 
-    public OrderReplacedHandler(EntityTransform entityTransform) {
+    public OrderTradeHandler(EntityTransform entityTransform) {
         super(entityTransform);
     }
 
     @Override
     public boolean test(ExecutionReport executionReport, SessionID sessionID) {
         try {
-            return executionReport.getExecType().getValue() == ExecType.REPLACED;
+            return (executionReport.getExecType().getValue() == ExecType.TRADE);
         } catch (FieldNotFound e) {
             Session.lookupSession(sessionID).getLog().onErrorEvent(" Caught exception: " + e.getMessage());
         }

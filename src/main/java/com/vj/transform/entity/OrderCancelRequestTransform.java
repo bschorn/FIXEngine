@@ -38,7 +38,7 @@ public class OrderCancelRequestTransform implements EntityTransform<OrderCancelR
      * Sell-Side
      */
     @Override
-    public EquityOrder inbound(OrderCancelRequest newOrderSingle, SessionID sessionID) {
+    public EquityOrder inbound(OrderCancelRequest newOrderSingle, SessionID sessionID, Object...objects) {
         throw new UnsupportedOperationException(OrderCancelRequestTransform.class.getSimpleName() + ".inbound(...)");
     }
 

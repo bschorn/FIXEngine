@@ -1,14 +1,14 @@
 package com.vj;
 
 import com.vj.handler.MessageHandlers;
-import com.vj.handler.order.*;
+import com.vj.handler.order.buyside.OrderDefaultHandler;
+import com.vj.handler.order.buyside.OrderTradeHandler;
 import com.vj.mock.MarketServiceImpl;
 import com.vj.model.attribute.Client;
 import com.vj.model.attribute.InstrumentSource;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.attribute.OrderType;
 import com.vj.model.attribute.Side;
-import com.vj.model.entity.EquityOrder;
 import com.vj.publisher.NewOrderSinglePublisher;
 import com.vj.publisher.OrderCancelReplaceRequestPublisher;
 import com.vj.publisher.OrderCancelRequestPublisher;
@@ -38,6 +38,7 @@ import quickfix.fix44.OrderCancelRequest;
 public class Assembly {
 
     private final static boolean mocking = true;
+    private final static boolean sellside = System.getProperties().containsKey("sellside");
     private final static Assembly INSTANCE = new Assembly();
 
     private final ClientService clients;
@@ -54,7 +55,11 @@ public class Assembly {
     private Assembly() {
         if (mocking) {
             clients = new com.vj.mock.ClientServiceImpl();
-            orders = new com.vj.mock.OrderServiceImpl();
+            if (sellside) {
+                orders = new com.vj.mock.SellSideOrderServiceImpl();
+            } else {
+                orders = new com.vj.mock.OrderServiceImpl();
+            }
             products = new com.vj.mock.ProductServiceImpl();
             markets = new MarketServiceImpl();
         } else {
@@ -62,7 +67,7 @@ public class Assembly {
             products = null;
             markets = null;
         }
-        handlers = new MessageHandlers.Impl();
+        handlers = new MessageHandlers();
         orderPublishers = new OrderPublishers();
         services = new Services(clients, orders, products, markets);
         transformers.register(OrderState.class, new OrderStateTransform());
@@ -79,18 +84,15 @@ public class Assembly {
     }
 
     public static void init() {
-        INSTANCE.handlers.register(new OrderPendingHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderAcceptedHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderPartialFillHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderFilledHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderPendingCancelHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderPendingReplaceHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderRejectedHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new DoneDayHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderCanceledHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderReplacedHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderPendingHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
+        INSTANCE.handlers.register(new OrderTradeHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
         INSTANCE.handlers.register(new OrderDefaultHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
+        INSTANCE.handlers.register(new com.vj.handler.order.sellside.NewOrderSingleHandler(
+                INSTANCE.transformers.entity(NewOrderSingle.class),
+                INSTANCE.transformers.entity(ExecutionReport.class),
+                INSTANCE.validators.get(NewOrderSingle.class)));
+        INSTANCE.handlers.register(new com.vj.handler.order.sellside.OrderCancelReplaceRequestHandler());
+        INSTANCE.handlers.register(new com.vj.handler.order.sellside.OrderCancelRequestHandler());
+
         INSTANCE.orderPublishers.register(new NewOrderSinglePublisher(INSTANCE.transformers.entity(NewOrderSingle.class)));
         INSTANCE.orderPublishers.register(new OrderCancelRequestPublisher(INSTANCE.transformers.entity(OrderCancelRequest.class)));
         INSTANCE.orderPublishers.register(new OrderCancelReplaceRequestPublisher(INSTANCE.transformers.entity(OrderCancelReplaceRequest.class)));

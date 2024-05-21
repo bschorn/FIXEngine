@@ -9,9 +9,12 @@ import java.util.Map;
 public class OrderStateTransform implements AttributeTransform<OrdStatus,OrderState> {
 
       private enum TransformState {
+            PENDING_NEW(OrdStatus.PENDING_NEW, OrderState.OPEN_PEND),
             NEW(OrdStatus.NEW, OrderState.OPEN),
             REJECTED(OrdStatus.REJECTED, OrderState.REJECTED),
+            PENDING_CXL(OrdStatus.PENDING_CANCEL, OrderState.CANCEL_PEND),
             CANCELED(OrdStatus.CANCELED, OrderState.CANCELED),
+            PENDING_REP(OrdStatus.PENDING_REPLACE, OrderState.REPLACE_PEND),
             PARTIAL(OrdStatus.PARTIALLY_FILLED, OrderState.PARTIAL),
             FILLED(OrdStatus.FILLED, OrderState.FILLED);
             char ordStatus;

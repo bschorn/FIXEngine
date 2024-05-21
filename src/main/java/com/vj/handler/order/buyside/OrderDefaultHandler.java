@@ -1,31 +1,18 @@
-package com.vj.handler.order;
+package com.vj.handler.order.buyside;
 
-import com.vj.model.attribute.OrderState;
-import com.vj.model.entity.EquityOrder;
-import com.vj.model.entity.Order;
 import com.vj.transform.entity.EntityTransform;
-import quickfix.FieldNotFound;
-import quickfix.Session;
-import quickfix.SessionID;
-import quickfix.field.ExecType;
-import quickfix.fix44.ExecutionReport;
 
 
-public class OrderCanceledHandler extends ExecutionReportHandler {
+public class OrderDefaultHandler extends ExecutionReportHandler {
 
 
-    public OrderCanceledHandler(EntityTransform entityTransform) {
+    public OrderDefaultHandler(EntityTransform entityTransform) {
         super(entityTransform);
     }
 
     @Override
-    public boolean test(ExecutionReport executionReport, SessionID sessionID) {
-        try {
-            return executionReport.getExecType().getValue() == ExecType.CANCELED;
-        } catch (FieldNotFound e) {
-            Session.lookupSession(sessionID).getLog().onErrorEvent(" Caught exception: " + e.getMessage());
-        }
-        return false;
+    public boolean isDefaultHandler() {
+        return true;
     }
 
     /*

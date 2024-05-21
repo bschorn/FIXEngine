@@ -28,7 +28,7 @@ public class EquityStateTransform implements EntityTransform<ExecutionReport,Equ
      * BuySide
      */
     @Override
-    public EquityOrder inbound(ExecutionReport executionReport, SessionID sessionID) throws FieldNotFound {
+    public EquityOrder inbound(ExecutionReport executionReport, SessionID sessionID, Object...objects) throws FieldNotFound {
         return services.orders().find(new ClientOrderId(executionReport.getClOrdID().getValue()));
     }
 

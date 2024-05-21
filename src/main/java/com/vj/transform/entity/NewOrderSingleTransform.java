@@ -1,9 +1,6 @@
 package com.vj.transform.entity;
 
-import com.vj.model.attribute.Client;
-import com.vj.model.attribute.InstrumentSource;
-import com.vj.model.attribute.OrderType;
-import com.vj.model.attribute.Side;
+import com.vj.model.attribute.*;
 import com.vj.model.entity.EquityOrder;
 import com.vj.model.entity.Market;
 import com.vj.service.Services;
@@ -46,9 +43,17 @@ public class NewOrderSingleTransform implements EntityTransform<NewOrderSingle,E
      *  Sell-Side
      */
     @Override
-    public EquityOrder inbound(NewOrderSingle newOrderSingle, SessionID sessionID) {
+    public EquityOrder inbound(NewOrderSingle newOrderSingle, SessionID sessionID, Object...objects) {
         try {
-            return EquityOrder.create(services.orders().nextId(), new Client(sessionID.getTargetCompID()))
+            // this is a kludge
+            if (objects.length == 0 || !(objects[0] instanceof OrderId)) {
+                throw new RuntimeException(this.getClass().getSimpleName() + ".inbound(...) requires third paramater to be an OrderId.");
+            }
+            OrderId orderId = (OrderId) objects[0];
+            // end of kludge
+
+
+            return EquityOrder.create(orderId, new Client(sessionID.getTargetCompID()))
                        .orderType(orderTypeTransform.inbound(newOrderSingle.getOrdType()))
                        .side(sideTransform.inbound(newOrderSingle.getSide()))
                        .instrument(services.products().find(instrumentSourceTransform.inbound(newOrderSingle.getSecurityIDSource()), newOrderSingle.getSecurityID().getValue()))
