@@ -1,28 +1,25 @@
 package com.vj.mock;
 
-import com.vj.model.attribute.Client;
 import com.vj.model.attribute.ClientOrderId;
 import com.vj.model.attribute.OrderId;
-import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.Order;
+import com.vj.publisher.OrderPublishers;
 import com.vj.service.OrderService;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 public class SellSideOrderServiceImpl implements OrderService {
 
     private final AtomicLong nextOrderId = new AtomicLong(2000000);
 
-    private final Map<OrderId,LinkedList<Order>> orderHistoryMap = new HashMap<>();
-    private final Map<Client,Set<OrderId>> clientOrderMap = new HashMap<>();
+    private final OrderPublishers orderPublishers;
+    private final Map<OrderId, LinkedList<Order>> orderHistoryMap = new HashMap<>();
+    private final Map<ClientOrderId, Order> clientOrderMap = new HashMap<>();
+
+    public SellSideOrderServiceImpl(OrderPublishers orderPublishers) {
+        this.orderPublishers = orderPublishers;
+    }
 
     @Override
     public OrderId nextId() {
@@ -34,31 +31,33 @@ public class SellSideOrderServiceImpl implements OrderService {
         LinkedList<Order> orderHistory = new LinkedList<>();
         orderHistory.add(order);
         this.orderHistoryMap.put(order.id(), orderHistory);
-        Set<OrderId> clientOrderIds = new HashSet<>();
-        clientOrderIds.add(order.id());
-        this.clientOrderMap.put(order.client(), clientOrderIds);
+        this.clientOrderMap.put(order.clientOrderId(), order);
+        orderPublishers.find(order).publish(order);
     }
 
     @Override
     public void modify(Order order) {
         LinkedList<Order> orderHistory = orderHistoryMap.get(order.id());
         orderHistory.add(order);
+        this.clientOrderMap.put(order.clientOrderId(), order);
+        orderPublishers.find(order).publish(order);
     }
 
     @Override
     public void update(Order order) {
         LinkedList<Order> orderHistory = orderHistoryMap.get(order.id());
         orderHistory.add(order);
+        this.clientOrderMap.put(order.clientOrderId(), order);
     }
 
     @Override
     public <T extends Order> T find(ClientOrderId clientOrderId) {
-        return null;
+        return (T) clientOrderMap.get(clientOrderId);
     }
 
     @Override
     public <T extends Order> List<T> getHistory(OrderId orderId) {
-        return null;
+        return (List<T>) orderHistoryMap.get(orderId);
     }
 
     @Override

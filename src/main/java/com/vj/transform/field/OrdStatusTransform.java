@@ -1,4 +1,4 @@
-package com.vj.transform.attribute;
+package com.vj.transform.field;
 
 import com.vj.model.attribute.OrderState;
 import quickfix.field.OrdStatus;
@@ -6,7 +6,7 @@ import quickfix.field.OrdStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrderStateTransform implements AttributeTransform<OrdStatus,OrderState> {
+public class OrdStatusTransform implements FieldTransform<OrdStatus,OrderState> {
 
       private enum TransformState {
             PENDING_NEW(OrdStatus.PENDING_NEW, OrderState.OPEN_PEND),
@@ -27,7 +27,7 @@ public class OrderStateTransform implements AttributeTransform<OrdStatus,OrderSt
       private final Map<Character,OrderState> mapInbound;
       private final Map<OrderState,OrdStatus> mapOutbound;
 
-      public OrderStateTransform() {
+      public OrdStatusTransform() {
             mapInbound = new HashMap<>();
             mapOutbound = new HashMap<>();
             for (TransformState transformState : TransformState.values()) {

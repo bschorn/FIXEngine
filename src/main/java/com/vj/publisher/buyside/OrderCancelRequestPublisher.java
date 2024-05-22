@@ -1,9 +1,10 @@
-package com.vj.publisher;
+package com.vj.publisher.buyside;
 
 import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
-import com.vj.transform.entity.OrderCancelRequestTransform;
+import com.vj.publisher.OrderPublisher;
+import com.vj.transform.message.OrderCancelRequestTransform;
 import quickfix.fix44.OrderCancelRequest;
 
 public class OrderCancelRequestPublisher extends OrderPublisher<EquityOrder> {
@@ -24,7 +25,7 @@ public class OrderCancelRequestPublisher extends OrderPublisher<EquityOrder> {
     public void publish(EquityOrder equityOrder) {
         OrderCancelRequest orderCancelRequest = orderCancelRequestTransform.outbound(equityOrder);
         try {
-            send(orderCancelRequest, equityOrder);
+            send(orderCancelRequest);
             services().orders().update(
                     equityOrder.update()
                             .orderState(OrderState.CANCEL_SENT)

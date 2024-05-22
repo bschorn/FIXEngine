@@ -1,10 +1,10 @@
-package com.vj.publisher;
+package com.vj.publisher.buyside;
 
-import com.vj.manager.SessionManager;
 import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
-import com.vj.transform.entity.OrderCancelReplaceRequestTransform;
+import com.vj.publisher.OrderPublisher;
+import com.vj.transform.message.OrderCancelReplaceRequestTransform;
 import quickfix.fix44.OrderCancelReplaceRequest;
 
 
@@ -28,7 +28,7 @@ public class OrderCancelReplaceRequestPublisher extends OrderPublisher<EquityOrd
     public void publish(EquityOrder equityOrder) {
         OrderCancelReplaceRequest orderCancelReplaceRequest = orderCancelReplaceRequestTransform.outbound(equityOrder);
         try {
-            send(orderCancelReplaceRequest, equityOrder);
+            send(orderCancelReplaceRequest);
             services().orders().update(
                     equityOrder.update()
                             .orderState(OrderState.REPLACE_SENT)

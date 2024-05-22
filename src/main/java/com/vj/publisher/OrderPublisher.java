@@ -9,7 +9,7 @@ import java.util.Optional;
 public abstract class OrderPublisher<T extends Order> implements EntityPublisher<T> {
 
 
-    protected void send(Message message, Order order) throws Exception {
+    protected void send(Message message) throws Exception {
         Optional<Exception> optException = SessionManager.sendMessage(message);
         if (optException.isPresent()) {
             throw optException.get();

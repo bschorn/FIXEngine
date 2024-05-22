@@ -1,11 +1,11 @@
-package com.vj.transform.attribute;
+package com.vj.transform.field;
 
 import quickfix.field.TradeDate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class TradeDateTransform implements AttributeTransform<quickfix.field.TradeDate,LocalDate> {
+public class TradeDateTransform implements FieldTransform<TradeDate,LocalDate> {
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.BASIC_ISO_DATE;
 

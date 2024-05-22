@@ -1,11 +1,11 @@
-package com.vj.transform.attribute;
+package com.vj.transform.field;
 
 import com.vj.model.attribute.Side;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SideTransform implements AttributeTransform<quickfix.field.Side,Side> {
+public class SideTransform implements FieldTransform<quickfix.field.Side,Side> {
 
     private final char[] outboundValues = {quickfix.field.Side.BUY, quickfix.field.Side.SELL, quickfix.field.Side.SELL_SHORT};
 

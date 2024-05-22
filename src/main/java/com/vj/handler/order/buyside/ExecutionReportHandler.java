@@ -4,9 +4,9 @@ import com.vj.handler.MessageHandler;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.model.entity.Order;
-import com.vj.transform.attribute.OrderStateTransform;
-import com.vj.transform.entity.EntityTransform;
-import com.vj.transform.entity.EquityStateTransform;
+import com.vj.transform.field.OrdStatusTransform;
+import com.vj.transform.message.MessageTransform;
+import com.vj.transform.message.ExecutionReportTransform;
 import quickfix.FieldNotFound;
 import quickfix.Session;
 import quickfix.SessionID;
@@ -15,14 +15,14 @@ import quickfix.fix44.ExecutionReport;
 
 public abstract class ExecutionReportHandler implements MessageHandler<ExecutionReport> {
 
-    private final EquityStateTransform equityStateTransform;
+    private final ExecutionReportTransform executionReportTransform;
 
-    public ExecutionReportHandler(EntityTransform entityTransform) {
-        if (entityTransform instanceof EquityStateTransform) {
-            this.equityStateTransform = (EquityStateTransform) entityTransform;
+    public ExecutionReportHandler(MessageTransform messageTransform) {
+        if (messageTransform instanceof ExecutionReportTransform) {
+            this.executionReportTransform = (ExecutionReportTransform) messageTransform;
         } else {
             throw new UnsupportedOperationException(ExecutionReportHandler.class.getSimpleName() +
-                    " constructor is expecting " + EquityStateTransform.class.getSimpleName());
+                    " constructor is expecting " + ExecutionReportTransform.class.getSimpleName());
         }
     }
 
@@ -35,9 +35,9 @@ public abstract class ExecutionReportHandler implements MessageHandler<Execution
     public void handle(ExecutionReport executionReport, SessionID sessionID) {
         try {
             // Retrieve the current version of the order for this executionReport
-            EquityOrder equityOrder = equityStateTransform().inbound(executionReport, sessionID);
+            EquityOrder equityOrder = executionReportTransform().inbound(executionReport, sessionID);
             // Transform the OrderStatus into OrderState
-            OrderState newOrderState = equityStateTransform().orderStateTransform().inbound(executionReport.getOrdStatus());
+            OrderState newOrderState = executionReportTransform().orderStateTransform().inbound(executionReport.getOrdStatus());
             // create new version of order
             Order updatedOrder = equityOrder.update(newOrderState);
             // Update OrderService
@@ -48,12 +48,12 @@ public abstract class ExecutionReportHandler implements MessageHandler<Execution
     }
 
 
-    protected EquityStateTransform equityStateTransform() {
-        return this.equityStateTransform;
+    protected ExecutionReportTransform executionReportTransform() {
+        return this.executionReportTransform;
     }
 
-    protected OrderStateTransform orderStateTransform() {
-        return this.equityStateTransform.orderStateTransform();
+    protected OrdStatusTransform ordStatusTransform() {
+        return this.executionReportTransform.orderStateTransform();
     }
 
 }

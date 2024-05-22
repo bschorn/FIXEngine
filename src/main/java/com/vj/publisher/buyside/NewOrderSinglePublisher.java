@@ -1,9 +1,10 @@
-package com.vj.publisher;
+package com.vj.publisher.buyside;
 
 import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
-import com.vj.transform.entity.NewOrderSingleTransform;
+import com.vj.publisher.OrderPublisher;
+import com.vj.transform.message.NewOrderSingleTransform;
 import quickfix.fix44.NewOrderSingle;
 
 public class NewOrderSinglePublisher extends OrderPublisher<EquityOrder> {
@@ -24,7 +25,7 @@ public class NewOrderSinglePublisher extends OrderPublisher<EquityOrder> {
     public void publish(EquityOrder equityOrder) {
         NewOrderSingle newOrderSingle = newOrderSingleTransform.outbound(equityOrder);
         try {
-            send(newOrderSingle, equityOrder);
+            send(newOrderSingle);
             services().orders().update(
                     equityOrder.update()
                             .orderState(OrderState.OPEN_SENT)

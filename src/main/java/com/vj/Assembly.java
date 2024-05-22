@@ -3,33 +3,34 @@ package com.vj;
 import com.vj.handler.MessageHandlers;
 import com.vj.handler.order.buyside.OrderDefaultHandler;
 import com.vj.handler.order.buyside.OrderTradeHandler;
+import com.vj.handler.order.sellside.NewOrderSingleHandler;
+import com.vj.handler.order.sellside.OrderCancelReplaceRequestHandler;
+import com.vj.handler.order.sellside.OrderCancelRequestHandler;
 import com.vj.mock.MarketServiceImpl;
-import com.vj.model.attribute.Client;
-import com.vj.model.attribute.InstrumentSource;
-import com.vj.model.attribute.OrderState;
-import com.vj.model.attribute.OrderType;
-import com.vj.model.attribute.Side;
-import com.vj.publisher.NewOrderSinglePublisher;
-import com.vj.publisher.OrderCancelReplaceRequestPublisher;
-import com.vj.publisher.OrderCancelRequestPublisher;
+import com.vj.publisher.buyside.NewOrderSinglePublisher;
+import com.vj.publisher.buyside.OrderCancelReplaceRequestPublisher;
+import com.vj.publisher.buyside.OrderCancelRequestPublisher;
 import com.vj.publisher.OrderPublishers;
+import com.vj.publisher.sellside.ExecutionReportPublisher;
 import com.vj.service.ClientService;
 import com.vj.service.MarketService;
 import com.vj.service.OrderService;
 import com.vj.service.ProductService;
 import com.vj.service.Services;
 import com.vj.transform.Transformers;
-import com.vj.transform.attribute.InstrumentSourceTransform;
-import com.vj.transform.attribute.NoAttributeTransform;
-import com.vj.transform.attribute.OrderStateTransform;
-import com.vj.transform.attribute.OrderTypeTransform;
-import com.vj.transform.attribute.SideTransform;
-import com.vj.transform.entity.*;
-import com.vj.transform.identifier.ClientTransform;
-import com.vj.transform.identifier.NoIdentifierTransform;
+import com.vj.transform.field.SecurityIDSourceTransform;
+import com.vj.transform.field.NoFieldTransform;
+import com.vj.transform.field.OrdStatusTransform;
+import com.vj.transform.field.OrdTypeTransform;
+import com.vj.transform.field.SideTransform;
+import com.vj.transform.message.*;
 import com.vj.validator.Validators;
 import com.vj.validator.order.equity.NewOrderSingleValidator;
 import com.vj.validator.order.equity.OrderCancelReplaceRequestValidator;
+import quickfix.field.OrdStatus;
+import quickfix.field.OrdType;
+import quickfix.field.SecurityIDSource;
+import quickfix.field.Side;
 import quickfix.fix44.ExecutionReport;
 import quickfix.fix44.NewOrderSingle;
 import quickfix.fix44.OrderCancelReplaceRequest;
@@ -49,16 +50,17 @@ public class Assembly {
     private final OrderPublishers orderPublishers;
     private final Services services;
 
-    private final Transformers transformers = new Transformers(new NoEntityTransform(), new NoAttributeTransform(), new NoIdentifierTransform());
+    private final Transformers transformers = new Transformers(new NoMessageTransform(), new NoFieldTransform());
     private final Validators validators = new Validators();
 
     private Assembly() {
+        orderPublishers = new OrderPublishers();
         if (mocking) {
             clients = new com.vj.mock.ClientServiceImpl();
             if (sellside) {
-                orders = new com.vj.mock.SellSideOrderServiceImpl();
+                orders = new com.vj.mock.SellSideOrderServiceImpl(orderPublishers);
             } else {
-                orders = new com.vj.mock.OrderServiceImpl();
+                orders = new com.vj.mock.OrderServiceImpl(orderPublishers);
             }
             products = new com.vj.mock.ProductServiceImpl();
             markets = new MarketServiceImpl();
@@ -68,34 +70,32 @@ public class Assembly {
             markets = null;
         }
         handlers = new MessageHandlers();
-        orderPublishers = new OrderPublishers();
         services = new Services(clients, orders, products, markets);
-        transformers.register(OrderState.class, new OrderStateTransform());
-        transformers.register(OrderType.class, new OrderTypeTransform());
+        transformers.register(OrdStatus.class, new OrdStatusTransform());
+        transformers.register(OrdType.class, new OrdTypeTransform());
         transformers.register(Side.class, new SideTransform());
-        transformers.register(InstrumentSource.class, new InstrumentSourceTransform());
-        transformers.register(Client.class, new ClientTransform());
+        transformers.register(SecurityIDSource.class, new SecurityIDSourceTransform());
         transformers.register(NewOrderSingle.class, new NewOrderSingleTransform(services, transformers));
         transformers.register(OrderCancelRequest.class, new OrderCancelRequestTransform(services, transformers));
         transformers.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestTransform(services, transformers));
-        transformers.register(ExecutionReport.class, new EquityStateTransform(services, transformers));
+        transformers.register(ExecutionReport.class, new ExecutionReportTransform(services, transformers));
         validators.register(NewOrderSingle.class, new NewOrderSingleValidator());
         validators.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestValidator());
     }
 
     public static void init() {
-        INSTANCE.handlers.register(new OrderTradeHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new OrderDefaultHandler(INSTANCE.transformers.entity(ExecutionReport.class)));
-        INSTANCE.handlers.register(new com.vj.handler.order.sellside.NewOrderSingleHandler(
-                INSTANCE.transformers.entity(NewOrderSingle.class),
-                INSTANCE.transformers.entity(ExecutionReport.class),
-                INSTANCE.validators.get(NewOrderSingle.class)));
-        INSTANCE.handlers.register(new com.vj.handler.order.sellside.OrderCancelReplaceRequestHandler());
-        INSTANCE.handlers.register(new com.vj.handler.order.sellside.OrderCancelRequestHandler());
-
-        INSTANCE.orderPublishers.register(new NewOrderSinglePublisher(INSTANCE.transformers.entity(NewOrderSingle.class)));
-        INSTANCE.orderPublishers.register(new OrderCancelRequestPublisher(INSTANCE.transformers.entity(OrderCancelRequest.class)));
-        INSTANCE.orderPublishers.register(new OrderCancelReplaceRequestPublisher(INSTANCE.transformers.entity(OrderCancelReplaceRequest.class)));
+        if (sellside) {
+            INSTANCE.handlers.register(new OrderTradeHandler(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.handlers.register(new OrderDefaultHandler(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new ExecutionReportPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+        } else {
+            INSTANCE.handlers.register(new NewOrderSingleHandler(INSTANCE.transformers.message(NewOrderSingle.class), INSTANCE.validators.get(NewOrderSingle.class)));
+            INSTANCE.handlers.register(new OrderCancelReplaceRequestHandler(INSTANCE.transformers.message(OrderCancelReplaceRequest.class)));
+            INSTANCE.handlers.register(new OrderCancelRequestHandler(INSTANCE.transformers.message(OrderCancelRequest.class)));
+            INSTANCE.orderPublishers.register(new NewOrderSinglePublisher(INSTANCE.transformers.message(NewOrderSingle.class)));
+            INSTANCE.orderPublishers.register(new OrderCancelRequestPublisher(INSTANCE.transformers.message(OrderCancelRequest.class)));
+            INSTANCE.orderPublishers.register(new OrderCancelReplaceRequestPublisher(INSTANCE.transformers.message(OrderCancelReplaceRequest.class)));
+        }
     }
 
     public static Services services() {

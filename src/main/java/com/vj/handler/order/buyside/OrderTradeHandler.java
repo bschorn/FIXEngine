@@ -2,7 +2,7 @@ package com.vj.handler.order.buyside;
 
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
-import com.vj.transform.entity.EntityTransform;
+import com.vj.transform.message.MessageTransform;
 import quickfix.FieldNotFound;
 import quickfix.Session;
 import quickfix.SessionID;
@@ -13,8 +13,8 @@ import quickfix.fix44.ExecutionReport;
 public class OrderTradeHandler extends ExecutionReportHandler {
 
 
-    public OrderTradeHandler(EntityTransform entityTransform) {
-        super(entityTransform);
+    public OrderTradeHandler(MessageTransform messageTransform) {
+        super(messageTransform);
     }
 
     @Override
@@ -31,9 +31,9 @@ public class OrderTradeHandler extends ExecutionReportHandler {
     public void handle(ExecutionReport executionReport, SessionID sessionID) {
         try {
             // Retrieve the current version of the order for this executionReport
-            EquityOrder equityOrder = equityStateTransform().inbound(executionReport, sessionID);
+            EquityOrder equityOrder = executionReportTransform().inbound(executionReport, sessionID);
             // Transform the OrderStatus into OrderState
-            OrderState newOrderState = equityStateTransform().orderStateTransform().inbound(executionReport.getOrdStatus());
+            OrderState newOrderState = executionReportTransform().orderStateTransform().inbound(executionReport.getOrdStatus());
             // Update OrderService
             services().orders().update(
                     // Create new version of order

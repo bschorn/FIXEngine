@@ -3,9 +3,8 @@ package com.vj.mock;
 import com.vj.model.attribute.Client;
 import com.vj.model.attribute.ClientOrderId;
 import com.vj.model.attribute.OrderId;
-import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.Order;
-import com.vj.publisher.EntityPublisher;
+import com.vj.publisher.OrderPublishers;
 import com.vj.service.OrderService;
 
 import java.util.*;
@@ -16,9 +15,13 @@ public class OrderServiceImpl implements OrderService {
 
     private final AtomicLong nextOrderId = new AtomicLong(1000000);
 
-    private final Map<Class<?>, EntityPublisher> publisherMap = new HashMap<>();
+    private final OrderPublishers orderPublishers;
     private final Map<OrderId,LinkedList<Order>> orderLogMap = new HashMap<>();
     private final Map<Client,List<OrderId>> orderListByClient = new HashMap<>();
+
+    public OrderServiceImpl(OrderPublishers orderPublishers) {
+        this.orderPublishers = orderPublishers;
+    }
 
     @Override
     public OrderId nextId() {
@@ -40,14 +43,14 @@ public class OrderServiceImpl implements OrderService {
             orderIds.add(order.id());
             this.orderListByClient.put(order.client(), orderIds);
         }
-        publisherMap.get(order.getClass()).publish(order);
+        orderPublishers.find(order).publish(order);
     }
 
     @Override
     public void modify(Order order) {
         LinkedList<Order> orderHistory = orderLogMap.get(order.id());
         orderHistory.add(order);
-        publisherMap.get(order.getClass()).publish(order);
+        orderPublishers.find(order).publish(order);
     }
 
     @Override

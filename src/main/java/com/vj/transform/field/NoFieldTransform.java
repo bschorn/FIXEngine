@@ -1,9 +1,10 @@
-package com.vj.transform.attribute;
+package com.vj.transform.field;
 
 import com.vj.model.attribute.StringAttribute;
+import quickfix.Field;
 
 
-public class NoAttributeTransform implements AttributeTransform<quickfix.Field,StringAttribute> {
+public class NoFieldTransform implements FieldTransform<Field,StringAttribute> {
     @Override
     public StringAttribute inbound(quickfix.Field value) {
         throw new UnsupportedOperationException();
