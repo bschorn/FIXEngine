@@ -5,7 +5,7 @@ import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.publisher.OrderPublisher;
 import com.vj.transform.message.OrderCancelReplaceRequestTransform;
-import quickfix.fix44.OrderCancelReplaceRequest;
+import quickfix.fix42.OrderCancelReplaceRequest;
 
 
 public class OrderCancelReplaceRequestPublisher extends OrderPublisher<EquityOrder> {

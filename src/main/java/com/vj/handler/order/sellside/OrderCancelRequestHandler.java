@@ -6,7 +6,7 @@ import com.vj.model.entity.EquityOrder;
 import com.vj.transform.message.OrderCancelRequestTransform;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
-import quickfix.fix44.OrderCancelRequest;
+import quickfix.fix42.OrderCancelRequest;
 
 public class OrderCancelRequestHandler implements MessageHandler<OrderCancelRequest> {
 

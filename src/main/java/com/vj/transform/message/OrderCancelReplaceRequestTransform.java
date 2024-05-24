@@ -8,11 +8,10 @@ import com.vj.transform.Transformers;
 import com.vj.transform.field.OrdTypeTransform;
 import com.vj.transform.field.SecurityIDSourceTransform;
 import com.vj.transform.field.SideTransform;
-import com.vj.transform.field.TradeDateTransform;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.field.*;
-import quickfix.fix44.OrderCancelReplaceRequest;
+import quickfix.fix42.OrderCancelReplaceRequest;
 
 import java.time.LocalDateTime;
 
@@ -22,14 +21,12 @@ public class OrderCancelReplaceRequestTransform implements MessageTransform<Orde
     private final OrdTypeTransform ordTypeTransform;
     private final SideTransform sideTransform;
     private final SecurityIDSourceTransform securityIDSourceTransform;
-    private final TradeDateTransform tradeDateTransform;
 
     public OrderCancelReplaceRequestTransform(Services services, Transformers transformers) {
         this.services = services;
         this.ordTypeTransform = transformers.field(OrdType.class);
         this.sideTransform = transformers.field(Side.class);
         this.securityIDSourceTransform = transformers.field(SecurityIDSource.class);
-        this.tradeDateTransform = transformers.field(TradeDate.class);
     }
 
     /**

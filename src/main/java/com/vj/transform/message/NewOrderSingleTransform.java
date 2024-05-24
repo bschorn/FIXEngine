@@ -10,13 +10,11 @@ import com.vj.transform.Transformers;
 import com.vj.transform.field.SecurityIDSourceTransform;
 import com.vj.transform.field.OrdTypeTransform;
 import com.vj.transform.field.SideTransform;
-import com.vj.transform.field.TradeDateTransform;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.field.*;
-import quickfix.fix44.NewOrderSingle;
+import quickfix.fix42.NewOrderSingle;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,EquityOrder> {
@@ -25,14 +23,12 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
     private final OrdTypeTransform ordTypeTransform;
     private final SideTransform sideTransform;
     private final SecurityIDSourceTransform securityIDSourceTransform;
-    private final TradeDateTransform tradeDateTransform;
 
     public NewOrderSingleTransform(Services services, Transformers transformers) {
         this.services = services;
         this.ordTypeTransform = transformers.field(OrdType.class);
         this.sideTransform = transformers.field(Side.class);
         this.securityIDSourceTransform = transformers.field(SecurityIDSource.class);
-        this.tradeDateTransform = transformers.field(TradeDate.class);
     }
 
     /**
@@ -69,7 +65,6 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
         message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
         message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));
         message.set(sideTransform.outbound(equityOrder.side()));
-        message.set(tradeDateTransform.outbound(services.markets().getTradeDate(Market.US_EQUITY)));
         message.set(new OrderQty(equityOrder.orderQty()));
         message.set(new Price(equityOrder.limitPrice()));
         message.set(ordTypeTransform.outbound(equityOrder.orderType()));

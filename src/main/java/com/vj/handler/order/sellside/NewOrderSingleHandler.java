@@ -9,7 +9,7 @@ import com.vj.validator.ValidatorResult;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.field.SecurityType;
-import quickfix.fix44.NewOrderSingle;
+import quickfix.fix42.NewOrderSingle;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +30,7 @@ public class NewOrderSingleHandler implements MessageHandler<NewOrderSingle> {
         try {
             if (message.isSet(SecurityType)) {
                 SecurityType securityType = message.getSecurityType();
-                return (!securityType.getValue().equalsIgnoreCase(quickfix.field.SecurityType.US_TREASURY_BILL) && !securityType.getValue().equalsIgnoreCase(quickfix.field.SecurityType.US_TREASURY_BILL_1));
+                return (!securityType.getValue().equalsIgnoreCase(quickfix.field.SecurityType.US_TREASURY_BILL));
             }
         } catch (FieldNotFound fnf) {
             // we already checked isSet

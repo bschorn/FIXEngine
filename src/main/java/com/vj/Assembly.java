@@ -24,11 +24,17 @@ import com.vj.validator.Validators;
 import com.vj.validator.order.equity.NewOrderSingleValidator;
 import com.vj.validator.order.equity.OrderCancelReplaceRequestValidator;
 import quickfix.field.*;
-import quickfix.fix44.ExecutionReport;
-import quickfix.fix44.NewOrderSingle;
-import quickfix.fix44.OrderCancelReplaceRequest;
-import quickfix.fix44.OrderCancelRequest;
+import quickfix.fix42.ExecutionReport;
+import quickfix.fix42.NewOrderSingle;
+import quickfix.fix42.OrderCancelReplaceRequest;
+import quickfix.fix42.OrderCancelRequest;
 
+/**
+ * Manual Dependency Injection
+ *
+ * The same can be accomplished through Spring.
+ *
+ */
 public class Assembly {
 
     private final static boolean mocking = true;
@@ -68,7 +74,6 @@ public class Assembly {
         transformers.register(OrdType.class, new OrdTypeTransform());
         transformers.register(Side.class, new SideTransform());
         transformers.register(SecurityIDSource.class, new SecurityIDSourceTransform());
-        transformers.register(TradeDate.class, new TradeDateTransform());
         transformers.register(NewOrderSingle.class, new NewOrderSingleTransform(services, transformers));
         transformers.register(OrderCancelRequest.class, new OrderCancelRequestTransform(services, transformers));
         transformers.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestTransform(services, transformers));

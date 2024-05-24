@@ -10,6 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Collection of MessageHandler instances.
+ * Providing a Message + SessionID the correct handler will be returned.
+ * The SessionID is only utilized when client specific handler(s) are needed to support a customization.
+ *
+ */
 public class MessageHandlers {
 
     private final Map<String, List<MessageHandler>> messageMap = new HashMap<>();

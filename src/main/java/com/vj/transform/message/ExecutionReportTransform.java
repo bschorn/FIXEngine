@@ -9,7 +9,7 @@ import com.vj.transform.field.*;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.field.*;
-import quickfix.fix44.ExecutionReport;
+import quickfix.fix42.ExecutionReport;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +20,6 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
     private final SecurityIDSourceTransform securityIDSourceTransform;
     private final SideTransform sideTransform;
     private final OrdTypeTransform ordTypeTransform;
-    private final TradeDateTransform tradeDateTransform;
 
     public ExecutionReportTransform(Services services, Transformers transformers) {
         this.services = services;
@@ -28,7 +27,6 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
         this.securityIDSourceTransform = transformers.field(SecurityIDSource.class);
         this.sideTransform = transformers.field(Side.class);
         this.ordTypeTransform = transformers.field(OrdType.class);
-        this.tradeDateTransform = transformers.field(TradeDate.class);
     }
 
     /**
@@ -50,7 +48,6 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
         message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));
         message.set(sideTransform.outbound(equityOrder.side()));
         message.set(new ClOrdID(equityOrder.clientOrderId().asValue()));
-        message.set(tradeDateTransform.outbound(equityOrder.tradeDate()));
         message.set(new OrderQty(equityOrder.orderQty()));
         message.set(new Price(equityOrder.limitPrice()));
         message.set(ordTypeTransform.outbound(equityOrder.orderType()));

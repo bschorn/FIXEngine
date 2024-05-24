@@ -10,7 +10,7 @@ import com.vj.transform.message.ExecutionReportTransform;
 import quickfix.FieldNotFound;
 import quickfix.Session;
 import quickfix.SessionID;
-import quickfix.fix44.ExecutionReport;
+import quickfix.fix42.ExecutionReport;
 
 
 public abstract class ExecutionReportHandler implements MessageHandler<ExecutionReport> {

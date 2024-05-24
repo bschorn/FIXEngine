@@ -7,7 +7,7 @@ import com.vj.transform.message.OrderCancelReplaceRequestTransform;
 import com.vj.transform.message.OrderCancelRequestTransform;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
-import quickfix.fix44.OrderCancelReplaceRequest;
+import quickfix.fix42.OrderCancelReplaceRequest;
 
 public class OrderCancelReplaceRequestHandler implements MessageHandler<OrderCancelReplaceRequest> {
 

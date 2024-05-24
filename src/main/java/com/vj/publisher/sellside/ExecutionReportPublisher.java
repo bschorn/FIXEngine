@@ -5,7 +5,7 @@ import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.publisher.OrderPublisher;
 import com.vj.transform.message.ExecutionReportTransform;
-import quickfix.fix44.ExecutionReport;
+import quickfix.fix42.ExecutionReport;
 
 public class ExecutionReportPublisher extends OrderPublisher<EquityOrder> {
     private final ExecutionReportTransform executionReportTransform;

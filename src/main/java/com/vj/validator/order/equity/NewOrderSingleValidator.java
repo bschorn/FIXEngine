@@ -3,7 +3,7 @@ package com.vj.validator.order.equity;
 import com.vj.validator.MessageValidator;
 import com.vj.validator.ValidatorResult;
 import quickfix.SessionID;
-import quickfix.fix44.NewOrderSingle;
+import quickfix.fix42.NewOrderSingle;
 
 import java.util.Optional;
 

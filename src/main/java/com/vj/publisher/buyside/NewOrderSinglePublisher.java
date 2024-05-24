@@ -5,7 +5,7 @@ import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.publisher.OrderPublisher;
 import com.vj.transform.message.NewOrderSingleTransform;
-import quickfix.fix44.NewOrderSingle;
+import quickfix.fix42.NewOrderSingle;
 
 public class NewOrderSinglePublisher extends OrderPublisher<EquityOrder> {
 

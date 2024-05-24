@@ -7,7 +7,7 @@ import quickfix.FieldNotFound;
 import quickfix.Session;
 import quickfix.SessionID;
 import quickfix.field.ExecType;
-import quickfix.fix44.ExecutionReport;
+import quickfix.fix42.ExecutionReport;
 
 
 public class OrderTradeHandler extends ExecutionReportHandler {
@@ -20,7 +20,11 @@ public class OrderTradeHandler extends ExecutionReportHandler {
     @Override
     public boolean test(ExecutionReport executionReport, SessionID sessionID) {
         try {
-            return (executionReport.getExecType().getValue() == ExecType.TRADE);
+            switch (executionReport.getExecType().getValue()) {
+                case ExecType.PARTIAL_FILL:
+                case ExecType.FILL:
+                    return true;
+            }
         } catch (FieldNotFound e) {
             Session.lookupSession(sessionID).getLog().onErrorEvent(" Caught exception: " + e.getMessage());
         }

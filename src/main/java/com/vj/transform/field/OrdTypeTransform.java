@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class OrdTypeTransform implements FieldTransform<OrdType,OrderType> {
 
-    private final char[] outboundValues = {OrdType.MARKET, OrdType.LIMIT, OrdType.STOP_STOP_LOSS, OrdType.STOP_LIMIT, OrdType.LIMIT_ON_CLOSE};
+    private final char[] outboundValues = { OrdType.MARKET, OrdType.LIMIT, OrdType.STOP, OrdType.STOP_LIMIT, OrdType.PEGGED };
 
     private final Map<Character,OrderType> mapInbound;
     private final Map<OrderType,OrdType> mapOutbound;
