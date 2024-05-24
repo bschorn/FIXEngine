@@ -9,6 +9,7 @@ public class EquityOrder implements Order {
 
 
     private final Data data;
+
     private EquityOrder(Data data) {
         this.data = data;
     }
@@ -127,23 +128,24 @@ public class EquityOrder implements Order {
     @Override
     public String toString() {
         return new StringBuilder()
-                   .append(data.orderId)
-                   .append("v")
-                   .append(data.version)
-                   .append(" [")
-                   .append("] ")
-                   .append(data.orderState.name())
-                   .append(" ")
-                   .append(data.instrument.toString())
-                   .append(" ")
-                   .append(data.side)
-                   .append(" ")
-                   .append(data.filledQty)
-                   .append("@")
-                   .append(data.filledPrice)
-                   .append(" ")
-                   .append(data.modifiedTS)
-                   .toString();
+                .append(data.orderId)
+                .append("v")
+                .append(data.version)
+                .append(" [")
+                .append(data.clientOrderId)
+                .append("] ")
+                .append(data.orderState.name())
+                .append(" ")
+                .append(data.instrument.toString())
+                .append(" ")
+                .append(data.side)
+                .append(" ")
+                .append(data.filledQty)
+                .append("@")
+                .append(data.filledPrice)
+                .append(" ")
+                .append(data.modifiedTS)
+                .toString();
     }
 
     /**
@@ -162,7 +164,6 @@ public class EquityOrder implements Order {
 
     /**
      * Update Order from Report (inbound)
-     *
      */
     public OrderUpdater update() {
         return new OrderUpdater(this);
@@ -206,11 +207,12 @@ public class EquityOrder implements Order {
 
     /**
      * Outbound
-     *
+     * <p>
      * Initial order creation
      */
     public static class OrderCreator {
-        private Data data = new Data();
+        private final Data data = new Data();
+
         public OrderCreator(OrderId orderId, Client client) {
             data.orderId = orderId;
             data.client = client;
@@ -220,30 +222,42 @@ public class EquityOrder implements Order {
             data.orderState = OrderState.OPEN_REQ;
             data.orderAction = OrderAction.OPEN;
         }
+
+        public OrderCreator orderState(OrderState orderState) {
+            data.orderState = orderState;
+            return this;
+        }
+
         public OrderCreator instrument(Instrument value) {
             data.instrument = value;
             return this;
         }
+
         public OrderCreator side(Side side) {
             data.side = side;
             return this;
         }
+
         public OrderCreator orderQty(double value) {
             data.orderQty = value;
             return this;
         }
+
         public OrderCreator limitPrice(double value) {
             data.limitPrice = value;
             return this;
         }
+
         public OrderCreator orderType(OrderType value) {
             data.orderType = value;
             return this;
         }
+
         public OrderCreator tradeDate(LocalDate value) {
             data.tradeDate = value;
             return this;
         }
+
         public EquityOrder end() {
             data.createdTS = Instant.now();
             data.modifiedTS = data.createdTS;
@@ -255,7 +269,8 @@ public class EquityOrder implements Order {
      * Clone for the next Order event
      */
     private static abstract class OrderClone {
-        private Data data = new Data();
+        private final Data data = new Data();
+
         public OrderClone(EquityOrder equityOrder) {
             data.orderId = equityOrder.data.orderId;
             data.clientOrderId = equityOrder.data.clientOrderId;
@@ -279,26 +294,31 @@ public class EquityOrder implements Order {
 
     /**
      * Outbound
-     *
+     * <p>
      * A change initiated internally that needs to be published
      */
     public static class OrderModifier extends OrderClone {
-        private Data data = new Data();
+        private final Data data = new Data();
+
         public OrderModifier(EquityOrder equityOrder) {
             super(equityOrder);
         }
+
         public OrderModifier orderAction(OrderAction value) {
             data.orderAction = value;
             return this;
         }
+
         public OrderModifier orderQty(double value) {
             data.orderQty = value;
             return this;
         }
+
         public OrderModifier limitPrice(double value) {
             data.limitPrice = value;
             return this;
         }
+
         public EquityOrder end() {
             data.modifiedTS = Instant.now();
             return new EquityOrder(data);
@@ -307,30 +327,36 @@ public class EquityOrder implements Order {
 
     /**
      * Inbound
-     *
+     * <p>
      * A change that has occurred that was received from external source
      */
     public static class OrderUpdater extends OrderClone {
-        private Data data = new Data();
+        private final Data data = new Data();
+
         public OrderUpdater(EquityOrder equityOrder) {
             super(equityOrder);
         }
+
         public OrderUpdater orderState(OrderState value) {
             data.orderState = value;
             return this;
         }
+
         public OrderUpdater orderAction(OrderAction value) {
             data.orderAction = value;
             return this;
         }
+
         public OrderUpdater totalFillQty(double value) {
             data.filledQty = value;
             return this;
         }
+
         public OrderUpdater avgFillPrice(double value) {
             data.filledPrice = value;
             return this;
         }
+
         public EquityOrder end() {
             data.updatedTS = Instant.now();
             return new EquityOrder(data);

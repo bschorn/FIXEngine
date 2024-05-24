@@ -56,6 +56,7 @@ public class NewOrderSingleHandler implements MessageHandler<NewOrderSingle> {
             OrderId orderId = services().orders().nextId();
             try {
                 EquityOrder order = newOrderSingleTransform.inbound(message, sessionID, orderId);
+                System.out.println(order);
                 services().orders().submit(order);
             } catch (FieldNotFound fnf) {
                 fnf.printStackTrace();

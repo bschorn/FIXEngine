@@ -17,6 +17,9 @@ public class MessageHandlers {
     public <T> MessageHandler<T> find(Message message, SessionID sessionID) {
         try {
             List<MessageHandler> list = messageMap.get(message.getHeader().getString(MsgType.FIELD));
+            if (list == null) {
+                throw new RuntimeException(MessageHandler.class.getSimpleName() + ".find() - there are no message handlers for " + message.getHeader().getString(MsgType.FIELD));
+            }
             if (list.size() == 1) {
                 return list.get(0);
             }
@@ -34,12 +37,9 @@ public class MessageHandlers {
     }
 
     public void register(MessageHandler messageHandler) {
-        List<MessageHandler> list = messageMap.get(messageHandler.msgType());
-        if (list == null) {
-            list = new ArrayList<>();
-            messageMap.put(messageHandler.msgType(), list);
-        }
+        List<MessageHandler> list = messageMap.getOrDefault(messageHandler.msgType(), new ArrayList<>());
         list.add(messageHandler);
+        messageMap.put(messageHandler.msgType(), list);
     }
 
     public int size() {

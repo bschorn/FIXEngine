@@ -3,9 +3,11 @@ package com.vj;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javax.management.ObjectName;
 
+import com.vj.tests.TestScenarioOne;
 import org.quickfixj.jmx.JmxExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +76,13 @@ public class BuySide {
         }
     }
 
+    public SessionID sessionID() {
+        for (SessionID sessionId : initiator.getSessions()) {
+            return sessionId;
+        }
+        return null;
+    }
+
 
     public static void main(String[] args) throws Exception {
         try {
@@ -86,8 +95,13 @@ public class BuySide {
             buySide.start();
             buySide.logon();
 
-            System.out.println("press <enter> to quit");
-            System.in.read();
+            if (Arrays.stream(args).anyMatch((arg -> arg.equals("test")))) {
+                TestScenarioOne tester = new TestScenarioOne(Assembly.services(), buySide.sessionID());
+                tester.run();
+            } else {
+                System.out.println("press <enter> to quit");
+                System.in.read();
+            }
 
             buySide.stop();
         } catch (Exception e) {
@@ -99,11 +113,11 @@ public class BuySide {
         InputStream inputStream = null;
         if (args.length == 0) {
             inputStream = SellSide.class.getResourceAsStream(System.getProperty("settings.resource"));
-        } else if (args.length == 1) {
+        } else if (args.length >= 1) {
             inputStream = new FileInputStream(args[0]);
         }
         if (inputStream == null) {
-            System.err.println("usage: " + SellSide.class.getName() + " [configFile].");
+            System.err.println("usage: " + BuySide.class.getName() + " [configFile].");
             System.exit(1);
         }
         return inputStream;

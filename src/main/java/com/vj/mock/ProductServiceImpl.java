@@ -14,12 +14,19 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductServiceImpl() {
         instrumentMap.put(InstrumentSource.SEDOL,new HashMap<>());
-        Map<String,Instrument> sedolMap = instrumentMap.get(InstrumentSource.SEDOL);
-        sedolMap.put("93049503", new Instrument(5000, "MSFT", InstrumentSource.SEDOL, "93049503"));
+        instrumentMap.put(InstrumentSource.RIC,new HashMap<>());
+
+
+        // fake instruments
+        register(new Instrument(5000, "MSFT", InstrumentSource.SEDOL, "93049503", InstrumentSource.RIC, "MSFT"));
     }
 
     public void register(Instrument instrument) {
-
+        for (InstrumentSource instrumentSource : instrumentMap.keySet()) {
+            if (instrument.has(instrumentSource)) {
+                instrumentMap.get(instrumentSource).put(instrument.get(instrumentSource), instrument);
+            }
+        }
     }
 
 

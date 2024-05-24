@@ -18,19 +18,12 @@ import com.vj.service.OrderService;
 import com.vj.service.ProductService;
 import com.vj.service.Services;
 import com.vj.transform.Transformers;
-import com.vj.transform.field.SecurityIDSourceTransform;
-import com.vj.transform.field.NoFieldTransform;
-import com.vj.transform.field.OrdStatusTransform;
-import com.vj.transform.field.OrdTypeTransform;
-import com.vj.transform.field.SideTransform;
+import com.vj.transform.field.*;
 import com.vj.transform.message.*;
 import com.vj.validator.Validators;
 import com.vj.validator.order.equity.NewOrderSingleValidator;
 import com.vj.validator.order.equity.OrderCancelReplaceRequestValidator;
-import quickfix.field.OrdStatus;
-import quickfix.field.OrdType;
-import quickfix.field.SecurityIDSource;
-import quickfix.field.Side;
+import quickfix.field.*;
 import quickfix.fix44.ExecutionReport;
 import quickfix.fix44.NewOrderSingle;
 import quickfix.fix44.OrderCancelReplaceRequest;
@@ -75,6 +68,7 @@ public class Assembly {
         transformers.register(OrdType.class, new OrdTypeTransform());
         transformers.register(Side.class, new SideTransform());
         transformers.register(SecurityIDSource.class, new SecurityIDSourceTransform());
+        transformers.register(TradeDate.class, new TradeDateTransform());
         transformers.register(NewOrderSingle.class, new NewOrderSingleTransform(services, transformers));
         transformers.register(OrderCancelRequest.class, new OrderCancelRequestTransform(services, transformers));
         transformers.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestTransform(services, transformers));
@@ -85,16 +79,16 @@ public class Assembly {
 
     public static void init() {
         if (sellside) {
-            INSTANCE.handlers.register(new OrderTradeHandler(INSTANCE.transformers.message(ExecutionReport.class)));
-            INSTANCE.handlers.register(new OrderDefaultHandler(INSTANCE.transformers.message(ExecutionReport.class)));
-            INSTANCE.orderPublishers.register(new ExecutionReportPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
-        } else {
             INSTANCE.handlers.register(new NewOrderSingleHandler(INSTANCE.transformers.message(NewOrderSingle.class), INSTANCE.validators.get(NewOrderSingle.class)));
             INSTANCE.handlers.register(new OrderCancelReplaceRequestHandler(INSTANCE.transformers.message(OrderCancelReplaceRequest.class)));
             INSTANCE.handlers.register(new OrderCancelRequestHandler(INSTANCE.transformers.message(OrderCancelRequest.class)));
+            INSTANCE.orderPublishers.register(new ExecutionReportPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+        } else {
             INSTANCE.orderPublishers.register(new NewOrderSinglePublisher(INSTANCE.transformers.message(NewOrderSingle.class)));
             INSTANCE.orderPublishers.register(new OrderCancelRequestPublisher(INSTANCE.transformers.message(OrderCancelRequest.class)));
             INSTANCE.orderPublishers.register(new OrderCancelReplaceRequestPublisher(INSTANCE.transformers.message(OrderCancelReplaceRequest.class)));
+            INSTANCE.handlers.register(new OrderTradeHandler(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.handlers.register(new OrderDefaultHandler(INSTANCE.transformers.message(ExecutionReport.class)));
         }
     }
 

@@ -54,7 +54,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
                    .instrument(services.products().find(securityIDSourceTransform.inbound(newOrderSingle.getSecurityIDSource()), newOrderSingle.getSecurityID().getValue()))
                    .orderQty(newOrderSingle.getOrderQty().getValue())
                    .limitPrice(newOrderSingle.getPrice().getValue())
-                   .tradeDate(LocalDate.now()) // this will need to be replaced
+                   .tradeDate(services.markets().getTradeDate(Market.US_EQUITY)) // TODO
                    .end();
     }
 

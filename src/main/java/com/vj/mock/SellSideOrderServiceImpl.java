@@ -2,6 +2,7 @@ package com.vj.mock;
 
 import com.vj.model.attribute.ClientOrderId;
 import com.vj.model.attribute.OrderId;
+import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.Order;
 import com.vj.publisher.OrderPublishers;
 import com.vj.service.OrderService;
@@ -32,7 +33,7 @@ public class SellSideOrderServiceImpl implements OrderService {
         orderHistory.add(order);
         this.orderHistoryMap.put(order.id(), orderHistory);
         this.clientOrderMap.put(order.clientOrderId(), order);
-        orderPublishers.find(order).publish(order);
+        modify(order.update(OrderState.OPEN_PEND));
     }
 
     @Override
