@@ -4,12 +4,20 @@ import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.publisher.OrderPublisher;
-import com.vj.transform.message.OrderCancelReplaceRequestTransform;
+import com.vj.transform.NoTransformationException;
+import com.vj.transform.succession.message.OrderCancelReplaceRequestTransform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import quickfix.fix42.OrderCancelReplaceRequest;
 
-
+/**
+ * BuySide - OrderCancelReplaceRequest
+ *
+ * EquityOrder (model) --transform--> OrderCancelReplaceRequest (quickfix) --send--> Broker
+ */
 public class OrderCancelReplaceRequestPublisher extends OrderPublisher<EquityOrder> {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderCancelReplaceRequestPublisher.class);
 
     private final OrderCancelReplaceRequestTransform orderCancelReplaceRequestTransform;
 
@@ -19,23 +27,33 @@ public class OrderCancelReplaceRequestPublisher extends OrderPublisher<EquityOrd
 
 
     @Override
-    public boolean test(EquityOrder equityOrder) {
+    public boolean isPublisher(EquityOrder equityOrder) {
         return equityOrder.orderAction() == OrderAction.REPLACE;
     }
 
 
     @Override
     public void publish(EquityOrder equityOrder) {
-        OrderCancelReplaceRequest orderCancelReplaceRequest = orderCancelReplaceRequestTransform.outbound(equityOrder);
         try {
-            send(orderCancelReplaceRequest);
-            services().orders().update(
-                    equityOrder.update()
-                            .orderState(OrderState.REPLACE_SENT)
-                            .orderAction(OrderAction.NONE)
-                            .end());
-        } catch (Exception ex) {
-            //TODO handle exception
+            OrderCancelReplaceRequest orderCancelReplaceRequest = orderCancelReplaceRequestTransform.outbound(equityOrder);
+            send(orderCancelReplaceRequest, new Callback() {
+                @Override
+                public void onSuccess() {
+                    services().orders().update(
+                            equityOrder.update()
+                                    .orderState(OrderState.REPLACE_SENT)
+                                    .orderAction(OrderAction.NONE)
+                                    .end());
+                }
+
+                @Override
+                public void onException(Exception exception) {
+                    //TODO handle exception
+                    log.error(exception.getMessage());
+                }
+            });
+        } catch (NoTransformationException nte) {
+            log.error(nte.getMessage(), nte);
         }
     }
 }

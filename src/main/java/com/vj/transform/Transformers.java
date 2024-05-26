@@ -1,7 +1,7 @@
 package com.vj.transform;
 
-import com.vj.transform.field.FieldTransform;
-import com.vj.transform.message.MessageTransform;
+import com.vj.transform.succession.field.FieldTransform;
+import com.vj.transform.succession.message.MessageTransform;
 import quickfix.Field;
 import quickfix.Message;
 

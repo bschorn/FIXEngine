@@ -1,6 +1,7 @@
-package com.vj.transform.field;
+package com.vj.transform.succession.field;
 
 import com.vj.model.attribute.OrderState;
+import com.vj.transform.NoTransformationException;
 import quickfix.field.OrdStatus;
 
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import java.util.Map;
 public class OrdStatusTransform implements FieldTransform<OrdStatus,OrderState> {
 
       private enum TransformState {
-            PENDING_NEW(OrdStatus.PENDING_NEW, OrderState.OPEN_PEND),
             NEW(OrdStatus.NEW, OrderState.OPEN),
             REJECTED(OrdStatus.REJECTED, OrderState.REJECTED),
             PENDING_CXL(OrdStatus.PENDING_CANCEL, OrderState.CANCEL_PEND),
@@ -37,13 +37,21 @@ public class OrdStatusTransform implements FieldTransform<OrdStatus,OrderState> 
       }
 
       @Override
-      public OrderState inbound(OrdStatus ordStatus) {
-            return mapInbound.get(ordStatus.getValue());
+      public OrderState inbound(OrdStatus ordStatus) throws NoTransformationException {
+            OrderState orderState = mapInbound.get(ordStatus.getValue());
+            if (orderState == null) {
+                  throw new NoTransformationException(OrderState.class, OrdStatus.class, ordStatus.getValue());
+            }
+            return orderState;
       }
 
       @Override
-      public OrdStatus outbound(OrderState orderState) {
-            return mapOutbound.get(orderState);
+      public OrdStatus outbound(OrderState orderState) throws NoTransformationException {
+            OrdStatus ordStatus = mapOutbound.get(orderState);
+            if (ordStatus == null) {
+                  throw new NoTransformationException(OrdStatus.class, OrderState.class, orderState.toString());
+            }
+            return ordStatus;
       }
 
 

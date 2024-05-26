@@ -1,19 +1,17 @@
-package com.vj.transform.message;
+package com.vj.transform.succession.message;
 
 import com.vj.model.attribute.ClientOrderId;
-import com.vj.model.attribute.InstrumentSource;
 import com.vj.model.entity.EquityOrder;
 import com.vj.service.Services;
+import com.vj.transform.NoTransformationException;
 import com.vj.transform.Transformers;
-import com.vj.transform.field.OrdTypeTransform;
-import com.vj.transform.field.SecurityIDSourceTransform;
-import com.vj.transform.field.SideTransform;
+import com.vj.transform.succession.field.OrdTypeTransform;
+import com.vj.transform.succession.field.SecurityIDSourceTransform;
+import com.vj.transform.succession.field.SideTransform;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.field.*;
 import quickfix.fix42.OrderCancelReplaceRequest;
-
-import java.time.LocalDateTime;
 
 public class OrderCancelReplaceRequestTransform implements MessageTransform<OrderCancelReplaceRequest, EquityOrder> {
 
@@ -41,19 +39,19 @@ public class OrderCancelReplaceRequestTransform implements MessageTransform<Orde
      * Buy-Side
      */
     @Override
-    public OrderCancelReplaceRequest outbound(EquityOrder equityOrder) {
+    public OrderCancelReplaceRequest outbound(EquityOrder equityOrder) throws NoTransformationException {
         OrderCancelReplaceRequest message = new OrderCancelReplaceRequest();
+        // required
         message.set(new ClOrdID(equityOrder.clientOrderId().asValue()));
-        message.set(new TransactTime(LocalDateTime.now()));
         message.set(new OrigClOrdID(equityOrder.origClientOrderId().asValue()));
-        message.set(new OrderID(equityOrder.brokerOrderId().asValue()));
+        message.set(sideTransform.outbound(equityOrder.side()));
+        message.set(new Symbol(equityOrder.instrument().toString()));
+        // optional
         message.set(new OrderQty(equityOrder.orderQty()));
         message.set(new Price(equityOrder.limitPrice()));
         message.set(ordTypeTransform.outbound(equityOrder.orderType()));
-        message.set(sideTransform.outbound(equityOrder.side()));
-        message.set(new Symbol(equityOrder.instrument().toString()));
-        message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));
-        message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
+        //message.set(new Account(equityOrder.account().asValue()));
+        //message.set(new OrderID(equityOrder.brokerOrderId().asValue()));
         return message;
     }
 }

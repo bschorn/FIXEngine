@@ -4,11 +4,20 @@ import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.publisher.OrderPublisher;
-import com.vj.transform.message.NewOrderSingleTransform;
+import com.vj.transform.NoTransformationException;
+import com.vj.transform.succession.message.NewOrderSingleTransform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import quickfix.fix42.NewOrderSingle;
 
+/**
+ * BuySide - NewOrderSingle
+ *
+ * EquityOrder (model) --transform--> NewOrderSingle (quickfix) --send--> Broker
+ */
 public class NewOrderSinglePublisher extends OrderPublisher<EquityOrder> {
 
+    private static final Logger log = LoggerFactory.getLogger(NewOrderSinglePublisher.class);
 
     private final NewOrderSingleTransform newOrderSingleTransform;
 
@@ -17,22 +26,34 @@ public class NewOrderSinglePublisher extends OrderPublisher<EquityOrder> {
     }
 
     @Override
-    public boolean test(EquityOrder equityOrder) {
+    public boolean isPublisher(EquityOrder equityOrder) {
         return equityOrder.orderAction() == OrderAction.OPEN;
     }
 
     @Override
     public void publish(EquityOrder equityOrder) {
-        NewOrderSingle newOrderSingle = newOrderSingleTransform.outbound(equityOrder);
         try {
-            send(newOrderSingle);
-            services().orders().update(
-                    equityOrder.update()
-                            .orderState(OrderState.OPEN_SENT)
-                            .orderAction(OrderAction.NONE)
-                            .end());
-        } catch (Exception ex) {
-            //TODO handle exception
+            NewOrderSingle newOrderSingle = newOrderSingleTransform.outbound(equityOrder);
+            // send quickfix Message to broker
+            send(newOrderSingle, new Callback() {
+                @Override
+                public void onSuccess() {
+                    // update order service with info that it's been sent
+                    services().orders().update(
+                            equityOrder.update()
+                                    .orderState(OrderState.OPEN_SENT)
+                                    .orderAction(OrderAction.NONE)
+                                    .end());
+                }
+
+                @Override
+                public void onException(Exception exception) {
+                    //TODO handle exception
+                    log.error(exception.getMessage());
+                }
+            });
+        } catch (NoTransformationException nte) {
+            log.error(nte.getMessage(), nte);
         }
     }
 }

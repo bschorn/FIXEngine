@@ -1,6 +1,7 @@
-package com.vj.transform.field;
+package com.vj.transform.succession.field;
 
 import com.vj.model.attribute.OrderType;
+import com.vj.transform.NoTransformationException;
 import quickfix.field.OrdType;
 
 import java.util.HashMap;
@@ -24,12 +25,20 @@ public class OrdTypeTransform implements FieldTransform<OrdType,OrderType> {
     }
 
     @Override
-    public OrderType inbound(quickfix.field.OrdType ordType) {
-        return mapInbound.get(ordType.getValue());
+    public OrderType inbound(quickfix.field.OrdType ordType) throws NoTransformationException {
+        OrderType orderType = mapInbound.get(ordType.getValue());
+        if (orderType == null) {
+            throw new NoTransformationException(OrderType.class, quickfix.field.OrdType.class, ordType.getValue());
+        }
+        return orderType;
     }
 
     @Override
-    public quickfix.field.OrdType outbound(OrderType orderType) {
-        return mapOutbound.get(orderType);
+    public quickfix.field.OrdType outbound(OrderType orderType) throws NoTransformationException {
+        quickfix.field.OrdType ordType = mapOutbound.get(orderType);
+        if (ordType == null) {
+            throw new NoTransformationException(quickfix.field.OrdType.class, OrderType.class, orderType.toString());
+        }
+        return ordType;
     }
 }

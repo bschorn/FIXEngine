@@ -146,10 +146,15 @@ public class SellSide {
         if (args.length == 0) {
             inputStream = SellSide.class.getResourceAsStream(System.getProperty("settings.resource"));
         } else if (args.length == 1) {
-            inputStream = new FileInputStream(args[0]);
+            String resourceName = args[0];
+            inputStream = SellSide.class.getResourceAsStream("/" + resourceName);
+            if (inputStream == null) {
+                System.out.println("Resource " + resourceName + " not found. Attemp to load as a file.");
+                inputStream = new FileInputStream(resourceName);
+            }
         }
         if (inputStream == null) {
-            System.err.println("usage: " + SellSide.class.getName() + " [configFile].");
+            System.err.println("No configuration resource/file was loaded.");
             System.exit(1);
         }
         return inputStream;

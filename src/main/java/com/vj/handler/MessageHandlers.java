@@ -30,7 +30,7 @@ public class MessageHandlers {
                 return list.get(0);
             }
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).test(message, sessionID)) {
+                if (list.get(i).isHandler(message, sessionID)) {
                     return list.get(i);
                 }
             }

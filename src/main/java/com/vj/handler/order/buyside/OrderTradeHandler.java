@@ -2,7 +2,10 @@ package com.vj.handler.order.buyside;
 
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
-import com.vj.transform.message.MessageTransform;
+import com.vj.transform.NoTransformationException;
+import com.vj.transform.succession.message.MessageTransform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import quickfix.FieldNotFound;
 import quickfix.Session;
 import quickfix.SessionID;
@@ -12,13 +15,14 @@ import quickfix.fix42.ExecutionReport;
 
 public class OrderTradeHandler extends ExecutionReportHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderTradeHandler.class);
 
     public OrderTradeHandler(MessageTransform messageTransform) {
         super(messageTransform);
     }
 
     @Override
-    public boolean test(ExecutionReport executionReport, SessionID sessionID) {
+    public boolean isHandler(ExecutionReport executionReport, SessionID sessionID) {
         try {
             switch (executionReport.getExecType().getValue()) {
                 case ExecType.PARTIAL_FILL:
@@ -49,6 +53,12 @@ public class OrderTradeHandler extends ExecutionReportHandler {
             );
         } catch (FieldNotFound fnf) {
             Session.lookupSession(sessionID).getLog().onIncoming("ExecutionReport: " + fnf.getMessage());
+            // TODO: handle exception
+            log.error(fnf.getMessage(), fnf);
+        } catch (NoTransformationException nte) {
+            Session.lookupSession(sessionID).getLog().onIncoming("ExecutionReport: " + nte.getMessage());
+            // TODO: handle exception
+            log.error(nte.getMessage(), nte);
         }
     }
 

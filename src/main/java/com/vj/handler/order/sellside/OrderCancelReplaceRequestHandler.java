@@ -3,13 +3,16 @@ package com.vj.handler.order.sellside;
 import com.vj.handler.MessageHandler;
 import com.vj.model.attribute.OrderAction;
 import com.vj.model.entity.EquityOrder;
-import com.vj.transform.message.OrderCancelReplaceRequestTransform;
-import com.vj.transform.message.OrderCancelRequestTransform;
+import com.vj.transform.succession.message.OrderCancelReplaceRequestTransform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.fix42.OrderCancelReplaceRequest;
 
 public class OrderCancelReplaceRequestHandler implements MessageHandler<OrderCancelReplaceRequest> {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderCancelReplaceRequestHandler.class);
 
     private final OrderCancelReplaceRequestTransform orderCancelReplaceRequestTransform;
 
@@ -46,7 +49,7 @@ public class OrderCancelReplaceRequestHandler implements MessageHandler<OrderCan
             services().orders().modify(modifiedOrder);
         } catch (FieldNotFound fnf) {
             // TODO: handle exception
-            fnf.printStackTrace();
+            log.error(fnf.getMessage(), fnf);
         }
 
     }

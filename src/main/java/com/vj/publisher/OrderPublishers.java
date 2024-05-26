@@ -11,7 +11,7 @@ public class OrderPublishers {
 
     public OrderPublisher find(Order order) {
         for (int i = 0; i < publisherList.size(); i++) {
-            if (publisherList.get(i).test(order)) {
+            if (publisherList.get(i).isPublisher(order)) {
                 return publisherList.get(i);
             }
         }

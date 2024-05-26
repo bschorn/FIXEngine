@@ -11,17 +11,18 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class SellSideOrderServiceImpl implements OrderService {
 
-    private static final Logger log = LoggerFactory.getLogger(SellSideOrderServiceImpl.class);
+public class BuySideOrderServiceImpl implements OrderService {
 
-    private final AtomicLong nextOrderId = new AtomicLong(2000000);
+    private static final Logger log = LoggerFactory.getLogger(BuySideOrderServiceImpl.class);
+
+    private final AtomicLong nextOrderId = new AtomicLong(1000000);
 
     private final OrderPublishers orderPublishers;
-    private final Map<OrderId, LinkedList<Order>> orderHistoryMap = new HashMap<>();
+    private final Map<OrderId,LinkedList<Order>> orderHistoryMap = new HashMap<>();
     private final Map<ClientOrderId, Order> clientOrderMap = new HashMap<>();
 
-    public SellSideOrderServiceImpl(OrderPublishers orderPublishers) {
+    public BuySideOrderServiceImpl(OrderPublishers orderPublishers) {
         this.orderPublishers = orderPublishers;
     }
 
@@ -30,6 +31,7 @@ public class SellSideOrderServiceImpl implements OrderService {
         return new OrderId(nextOrderId.getAndIncrement());
     }
 
+
     @Override
     public void submit(Order order) {
         if (orderHistoryMap.containsKey(order.id())) {
@@ -37,16 +39,20 @@ public class SellSideOrderServiceImpl implements OrderService {
         }
         LinkedList<Order> orderHistory = new LinkedList<>();
         orderHistory.add(order);
-        this.orderHistoryMap.put(order.id(), orderHistory);
-        this.clientOrderMap.put(order.clientOrderId(), order);
+        orderHistoryMap.put(order.id(), orderHistory);
+        clientOrderMap.put(order.clientOrderId(), order);
         orderPublishers.find(order).publish(order);
     }
 
     @Override
     public void modify(Order order) {
+        if (!clientOrderMap.containsKey(order.clientOrderId())) {
+            throw new RuntimeException("OrderService.modify() - order is not known: " + order.clientOrderId());
+        }
         LinkedList<Order> orderHistory = orderHistoryMap.get(order.id());
         orderHistory.add(order);
-        this.clientOrderMap.put(order.clientOrderId(), order);
+        clientOrderMap.put(order.clientOrderId(), order);
+
         orderPublishers.find(order).publish(order);
     }
 
@@ -54,17 +60,7 @@ public class SellSideOrderServiceImpl implements OrderService {
     public void update(Order order) {
         LinkedList<Order> orderHistory = orderHistoryMap.get(order.id());
         orderHistory.add(order);
-        this.clientOrderMap.put(order.clientOrderId(), order);
-    }
-
-    @Override
-    public <T extends Order> T find(ClientOrderId clientOrderId) {
-        return (T) clientOrderMap.get(clientOrderId);
-    }
-
-    @Override
-    public <T extends Order> List<T> getHistory(OrderId orderId) {
-        return (List<T>) orderHistoryMap.get(orderId);
+        clientOrderMap.put(order.clientOrderId(), order);
     }
 
     @Override
@@ -74,6 +70,16 @@ public class SellSideOrderServiceImpl implements OrderService {
             return orderHistory.getLast();
         }
         return null;
+    }
+
+    @Override
+    public Order find(ClientOrderId clientOrderId) {
+        return clientOrderMap.get(clientOrderId);
+    }
+
+    @Override
+    public List<Order> getHistory(OrderId orderId) {
+        return orderHistoryMap.get(orderId);
     }
 
 }

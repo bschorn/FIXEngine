@@ -12,11 +12,46 @@ public class EquityOrder implements Order {
 
     private EquityOrder(Data data) {
         this.data = data;
+        if (data.orderAction == null) {
+            throw new RuntimeException(OrderAction.class.getSimpleName() + " may not be null.");
+        }
+        if (data.orderState == null) {
+            throw new RuntimeException(OrderState.class.getSimpleName() + " may not be null.");
+        }
+        if (data.exchange == null) {
+            throw new RuntimeException(Exchange.class.getSimpleName() + " may not be null.");
+        }
+        if (data.origClientOrderId == null) {
+            throw new RuntimeException("Orig" + ClientOrderId.class.getSimpleName() + " may not be null.");
+        }
+        if (data.client == null) {
+            throw new RuntimeException(Client.class.getSimpleName() + " may not be null.");
+        }
+        if (data.clientOrderId == null) {
+            throw new RuntimeException(ClientOrderId.class.getSimpleName() + " may not be null.");
+        }
+        if (data.orderId == null) {
+            throw new RuntimeException(OrderId.class.getSimpleName() + " may not be null.");
+        }
+        if (data.account == null) {
+            throw new RuntimeException(Account.class.getSimpleName() + " may not be null.");
+        }
+        if (data.orderType == null) {
+            throw new RuntimeException(OrderType.class.getSimpleName() + " may not be null.");
+        }
+        if (data.side == null) {
+            throw new RuntimeException(Side.class.getSimpleName() + " may not be null.");
+        }
     }
 
     @Override
     public OrderId id() {
         return data.orderId;
+    }
+
+    @Override
+    public Account account() {
+        return data.account;
     }
 
     @Override
@@ -47,6 +82,11 @@ public class EquityOrder implements Order {
     @Override
     public Instrument instrument() {
         return data.instrument;
+    }
+
+    @Override
+    public Exchange exchange() {
+        return data.exchange;
     }
 
     @Override
@@ -127,23 +167,35 @@ public class EquityOrder implements Order {
 
     @Override
     public String toString() {
-        return new StringBuilder()
+        return new StringBuilder("Id: ")
                 .append(data.orderId)
-                .append("v")
+                .append(" Ver")
                 .append(data.version)
-                .append(" [")
+                .append(" Clid:")
                 .append(data.clientOrderId)
-                .append("] ")
-                .append(data.orderState.name())
+                .append(" Bkid:")
+                .append(data.brokerOrderId == null ? "unset" : data.brokerOrderId)
                 .append(" ")
-                .append(data.instrument.toString())
+                .append(data.account)
+                .append(" [")
+                .append(data.orderState.name())
+                .append(":")
+                .append(data.orderAction.name())
+                .append("] ")
+                .append(data.exchange)
                 .append(" ")
                 .append(data.side)
                 .append(" ")
+                .append(data.instrument.toString())
+                .append(" ")
+                .append(data.orderQty)
+                .append("@")
+                .append(data.limitPrice)
+                .append(" Filled[")
                 .append(data.filledQty)
                 .append("@")
                 .append(data.filledPrice)
-                .append(" ")
+                .append("] TS:")
                 .append(data.modifiedTS)
                 .toString();
     }
@@ -172,11 +224,13 @@ public class EquityOrder implements Order {
     /**
      * Order Data Struct (record)
      */
-    private static class Data {
+    private static class Data implements Cloneable {
         // Immutables
         OrderId orderId;
+        Account account;
         Client client;
         Instrument instrument;
+        Exchange exchange;
         LocalDate tradeDate;
         OrderType orderType;
         Side side;
@@ -203,6 +257,15 @@ public class EquityOrder implements Order {
         OrderState orderState;
         // What do we want to do now?
         OrderAction orderAction;
+
+        @Override
+        public Object clone() {
+            try {
+                return (Data) super.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -221,6 +284,12 @@ public class EquityOrder implements Order {
             data.origClientOrderId = data.clientOrderId;
             data.orderState = OrderState.OPEN_REQ;
             data.orderAction = OrderAction.OPEN;
+            data.tradeDate = LocalDate.now();
+        }
+
+        public OrderCreator account(Account account) {
+            data.account = account;
+            return this;
         }
 
         public OrderCreator orderState(OrderState orderState) {
@@ -228,8 +297,18 @@ public class EquityOrder implements Order {
             return this;
         }
 
+        public OrderCreator orderAction(OrderAction orderAction) {
+            data.orderAction = orderAction;
+            return this;
+        }
+
         public OrderCreator instrument(Instrument value) {
             data.instrument = value;
+            return this;
+        }
+
+        public OrderCreator exchange(Exchange exchange) {
+            data.exchange = exchange;
             return this;
         }
 
@@ -269,26 +348,11 @@ public class EquityOrder implements Order {
      * Clone for the next Order event
      */
     private static abstract class OrderClone {
-        private final Data data = new Data();
+        protected final Data data;
 
         public OrderClone(EquityOrder equityOrder) {
-            data.orderId = equityOrder.data.orderId;
-            data.clientOrderId = equityOrder.data.clientOrderId;
-            data.origClientOrderId = equityOrder.data.origClientOrderId;
-            data.brokerOrderId = equityOrder.data.brokerOrderId;
+            data = (Data) equityOrder.data.clone();
             data.version = equityOrder.data.version.getNext();
-            data.instrument = equityOrder.data.instrument;
-            data.orderType = equityOrder.data.orderType;
-            data.tradeDate = equityOrder.data.tradeDate;
-            data.side = equityOrder.data.side;
-            data.createdTS = equityOrder.data.createdTS;
-            data.modifiedTS = equityOrder.data.modifiedTS;
-            data.updatedTS = equityOrder.data.updatedTS;
-            data.orderState = equityOrder.data.orderState;
-            data.orderAction = equityOrder.data.orderAction;
-            data.limitPrice = equityOrder.data.limitPrice;
-            data.filledPrice = equityOrder.data.filledPrice;
-            data.filledQty = equityOrder.data.filledQty;
         }
     }
 
@@ -298,8 +362,6 @@ public class EquityOrder implements Order {
      * A change initiated internally that needs to be published
      */
     public static class OrderModifier extends OrderClone {
-        private final Data data = new Data();
-
         public OrderModifier(EquityOrder equityOrder) {
             super(equityOrder);
         }
@@ -331,10 +393,13 @@ public class EquityOrder implements Order {
      * A change that has occurred that was received from external source
      */
     public static class OrderUpdater extends OrderClone {
-        private final Data data = new Data();
-
         public OrderUpdater(EquityOrder equityOrder) {
             super(equityOrder);
+        }
+
+        public OrderUpdater brokerOrderId(BrokerOrderId brokerOrderId) {
+            data.brokerOrderId = brokerOrderId;
+            return this;
         }
 
         public OrderUpdater orderState(OrderState value) {

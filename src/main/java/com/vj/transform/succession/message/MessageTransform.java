@@ -1,13 +1,14 @@
-package com.vj.transform.message;
+package com.vj.transform.succession.message;
 
+import com.vj.transform.NoTransformationException;
 import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.SessionID;
 
 
 public interface MessageTransform<T extends quickfix.Message,R>  {
-    R inbound(T message, SessionID sessionID, Object...objects) throws FieldNotFound;
-    T outbound(R r);
+    R inbound(T message, SessionID sessionID, Object...objects) throws FieldNotFound, NoTransformationException;
+    T outbound(R r) throws NoTransformationException;
 
     class Unimplemented implements MessageTransform<Message,Object> {
         @Override

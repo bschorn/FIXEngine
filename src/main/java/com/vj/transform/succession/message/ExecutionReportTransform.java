@@ -1,11 +1,15 @@
-package com.vj.transform.message;
+package com.vj.transform.succession.message;
 
 import com.vj.model.attribute.ClientOrderId;
 import com.vj.model.attribute.InstrumentSource;
 import com.vj.model.entity.EquityOrder;
 import com.vj.service.Services;
+import com.vj.transform.NoTransformationException;
 import com.vj.transform.Transformers;
-import com.vj.transform.field.*;
+import com.vj.transform.succession.field.OrdStatusTransform;
+import com.vj.transform.succession.field.OrdTypeTransform;
+import com.vj.transform.succession.field.SecurityIDSourceTransform;
+import com.vj.transform.succession.field.SideTransform;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.field.*;
@@ -41,8 +45,9 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
      * SellSide
      */
     @Override
-    public ExecutionReport outbound(EquityOrder equityOrder) {
+    public ExecutionReport outbound(EquityOrder equityOrder) throws NoTransformationException {
         ExecutionReport message = new ExecutionReport();
+        message.set(new Account(equityOrder.account().asValue()));
         message.set(new Symbol(equityOrder.instrument().toString()));
         message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
         message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));
@@ -51,7 +56,6 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
         message.set(new OrderQty(equityOrder.orderQty()));
         message.set(new Price(equityOrder.limitPrice()));
         message.set(ordTypeTransform.outbound(equityOrder.orderType()));
-        message.set(new TimeInForce(TimeInForce.DAY));
         message.set(new TransactTime(LocalDateTime.now()));
         message.set(ordStatusTransform.outbound(equityOrder.orderState()));
         return message;

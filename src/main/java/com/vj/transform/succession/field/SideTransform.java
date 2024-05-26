@@ -1,6 +1,7 @@
-package com.vj.transform.field;
+package com.vj.transform.succession.field;
 
 import com.vj.model.attribute.Side;
+import com.vj.transform.NoTransformationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +24,20 @@ public class SideTransform implements FieldTransform<quickfix.field.Side,Side> {
     }
 
     @Override
-    public Side inbound(quickfix.field.Side side) {
-        return mapInbound.get(side.getValue());
+    public Side inbound(quickfix.field.Side qfSide) throws NoTransformationException {
+        Side side = mapInbound.get(qfSide.getValue());
+        if (qfSide == null) {
+            throw new NoTransformationException(Side.class, quickfix.field.Side.class, qfSide.toString());
+        }
+        return side;
     }
 
     @Override
-    public quickfix.field.Side outbound(Side side) {
-        return mapOutbound.get(side);
+    public quickfix.field.Side outbound(Side side) throws NoTransformationException {
+        quickfix.field.Side qfSide = mapOutbound.get(side);
+        if (qfSide == null) {
+            throw new NoTransformationException(quickfix.field.Side.class, Side.class, side.toString());
+        }
+        return qfSide;
     }
 }

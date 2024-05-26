@@ -6,7 +6,6 @@ import com.vj.handler.order.buyside.OrderTradeHandler;
 import com.vj.handler.order.sellside.NewOrderSingleHandler;
 import com.vj.handler.order.sellside.OrderCancelReplaceRequestHandler;
 import com.vj.handler.order.sellside.OrderCancelRequestHandler;
-import com.vj.mock.MarketServiceImpl;
 import com.vj.publisher.buyside.NewOrderSinglePublisher;
 import com.vj.publisher.buyside.OrderCancelReplaceRequestPublisher;
 import com.vj.publisher.buyside.OrderCancelRequestPublisher;
@@ -17,9 +16,9 @@ import com.vj.service.MarketService;
 import com.vj.service.OrderService;
 import com.vj.service.ProductService;
 import com.vj.service.Services;
+import com.vj.transform.NoFieldTransform;
+import com.vj.transform.NoMessageTransform;
 import com.vj.transform.Transformers;
-import com.vj.transform.field.*;
-import com.vj.transform.message.*;
 import com.vj.validator.Validators;
 import com.vj.validator.order.equity.NewOrderSingleValidator;
 import com.vj.validator.order.equity.OrderCancelReplaceRequestValidator;
@@ -59,10 +58,10 @@ public class Assembly {
             if (sellside) {
                 orders = new com.vj.mock.SellSideOrderServiceImpl(orderPublishers);
             } else {
-                orders = new com.vj.mock.OrderServiceImpl(orderPublishers);
+                orders = new com.vj.mock.BuySideOrderServiceImpl(orderPublishers);
             }
             products = new com.vj.mock.ProductServiceImpl();
-            markets = new MarketServiceImpl();
+            markets = new com.vj.mock.MarketServiceImpl();
         } else {
             orders = null;
             products = null;
@@ -70,14 +69,18 @@ public class Assembly {
         }
         handlers = new MessageHandlers();
         services = new Services(clients, orders, products, markets);
-        transformers.register(OrdStatus.class, new OrdStatusTransform());
-        transformers.register(OrdType.class, new OrdTypeTransform());
-        transformers.register(Side.class, new SideTransform());
-        transformers.register(SecurityIDSource.class, new SecurityIDSourceTransform());
-        transformers.register(NewOrderSingle.class, new NewOrderSingleTransform(services, transformers));
-        transformers.register(OrderCancelRequest.class, new OrderCancelRequestTransform(services, transformers));
-        transformers.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestTransform(services, transformers));
-        transformers.register(ExecutionReport.class, new ExecutionReportTransform(services, transformers));
+        // transformers - fields
+        transformers.register(OrdStatus.class, new com.vj.transform.succession.field.OrdStatusTransform());
+        transformers.register(OrdType.class, new com.vj.transform.succession.field.OrdTypeTransform());
+        transformers.register(Side.class, new com.vj.transform.succession.field.SideTransform());
+        transformers.register(SecurityIDSource.class, new com.vj.transform.succession.field.SecurityIDSourceTransform());
+        transformers.register(ExDestination.class, new com.vj.transform.succession.field.ExDestinationTransform());
+        // transformers - messages
+        transformers.register(NewOrderSingle.class, new com.vj.transform.succession.message.NewOrderSingleTransform(services, transformers));
+        transformers.register(OrderCancelRequest.class, new com.vj.transform.succession.message.OrderCancelRequestTransform(services, transformers));
+        transformers.register(OrderCancelReplaceRequest.class, new com.vj.transform.succession.message.OrderCancelReplaceRequestTransform(services, transformers));
+        transformers.register(ExecutionReport.class, new com.vj.transform.succession.message.ExecutionReportTransform(services, transformers));
+        // validators - messages
         validators.register(NewOrderSingle.class, new NewOrderSingleValidator());
         validators.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestValidator());
     }

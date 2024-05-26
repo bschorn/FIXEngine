@@ -10,12 +10,14 @@ import java.time.LocalDate;
 public interface Order {
 
     OrderId id();
+    Account account();
     Client client();
     ClientOrderId clientOrderId();
     BrokerOrderId brokerOrderId();
     ClientOrderId origClientOrderId();
     LocalDate tradeDate();
     Instrument instrument();
+    Exchange exchange();
     OrderType orderType();
     Side side();
     Instant createdTS();

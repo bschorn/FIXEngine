@@ -5,6 +5,9 @@ public abstract class StringAttribute implements Attribute<String>, Comparable<S
     private final String value;
     protected StringAttribute(String value) {
         this.value = value;
+        if (value == null) {
+            throw new RuntimeException(this.getClass().getSimpleName() + " can not be null.");
+        }
     }
 
     @Override

@@ -9,11 +9,17 @@ import java.util.Optional;
 public abstract class OrderPublisher<T extends Order> implements EntityPublisher<T> {
 
 
-    protected void send(Message message) throws Exception {
+    public interface Callback {
+        void onSuccess();
+        void onException(Exception exception);
+    }
+
+    protected void send(Message message, Callback callback) {
         Optional<Exception> optException = SessionManager.sendMessage(message);
         if (optException.isPresent()) {
-            throw optException.get();
+            callback.onException(optException.get());
+        } else {
+            callback.onSuccess();
         }
-
     }
 }

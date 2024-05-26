@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 import javax.management.ObjectName;
 
+import com.vj.model.attribute.Account;
+import com.vj.service.ClientService;
 import com.vj.tests.TestScenarioOne;
 import org.quickfixj.jmx.JmxExporter;
 import org.slf4j.Logger;
@@ -25,20 +27,23 @@ public class BuySide {
     private Initiator initiator = null;
     private final JmxExporter jmxExporter;
     private final ObjectName connectorObjectName;
+    private final SessionSettings sessionSettings;
+    private final ClientService clientService;
 
 
-    public BuySide(SessionSettings settings) throws Exception {
+    public BuySide(SessionSettings settings, ClientService clientService) throws Exception {
+        this.sessionSettings = settings;
         Application application = new Application(settings);
         MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
         LogFactory logFactory = new ScreenLogFactory(true, true, true);
         MessageFactory messageFactory = new DefaultMessageFactory();
-
         initiator = new SocketInitiator(application, messageStoreFactory, settings, logFactory,
                 messageFactory);
 
         jmxExporter = new JmxExporter();
         connectorObjectName = jmxExporter.register(initiator);
         log.info("Acceptor registered with JMX, name={}", connectorObjectName);
+        this.clientService = clientService;
     }
 
 
@@ -66,6 +71,12 @@ public class BuySide {
         if (initiatorStarted) {
             for (SessionID sessionId : initiator.getSessions()) {
                 Session.lookupSession(sessionId).logon();
+                try {
+                    Account sessionAccount = new Account(sessionSettings.getString(sessionId, "SenderAccount"));
+                    clientService.register(sessionId.getSenderCompID(), sessionAccount);
+                } catch (ConfigError configError) {
+                    log.error(configError.getMessage());
+                }
             }
         }
     }
@@ -91,12 +102,16 @@ public class BuySide {
             SessionSettings settings = new SessionSettings(inputStream);
             inputStream.close();
 
-            BuySide buySide = new BuySide(settings);
+            BuySide buySide = new BuySide(settings, Assembly.services().clients());
             buySide.start();
             buySide.logon();
 
-            if (Arrays.stream(args).anyMatch((arg -> arg.equals("test")))) {
-                TestScenarioOne tester = new TestScenarioOne(Assembly.services(), buySide.sessionID());
+            boolean testing = Boolean.valueOf(System.getProperty("test", "false"));
+            if (testing) {
+                TestScenarioOne tester = new TestScenarioOne(
+                        Assembly.services(),
+                        buySide.sessionID(),
+                        Account.getAccount());
                 tester.run();
             } else {
                 System.out.println("press <enter> to quit");
@@ -114,7 +129,12 @@ public class BuySide {
         if (args.length == 0) {
             inputStream = SellSide.class.getResourceAsStream(System.getProperty("settings.resource"));
         } else if (args.length >= 1) {
-            inputStream = new FileInputStream(args[0]);
+            String resourceName = args[0];
+            inputStream = SellSide.class.getResourceAsStream("/" + resourceName);
+            if (inputStream == null) {
+                System.out.println("Resource " + resourceName + " not found. Attempt to load as a file.");
+                inputStream = new FileInputStream(resourceName);
+            }
         }
         if (inputStream == null) {
             System.err.println("usage: " + BuySide.class.getName() + " [configFile].");

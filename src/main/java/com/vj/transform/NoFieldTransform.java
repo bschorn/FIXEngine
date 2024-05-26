@@ -1,6 +1,7 @@
-package com.vj.transform.field;
+package com.vj.transform;
 
 import com.vj.model.attribute.StringAttribute;
+import com.vj.transform.succession.field.FieldTransform;
 import quickfix.Field;
 
 

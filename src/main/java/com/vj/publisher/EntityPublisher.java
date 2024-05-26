@@ -10,7 +10,7 @@ public interface EntityPublisher<T> {
      * Is this instance the correct publisher for this entity?
      *
      */
-    default boolean test(T t) {
+    default boolean isPublisher(T t) {
         return true;
     }
     void publish(T t);

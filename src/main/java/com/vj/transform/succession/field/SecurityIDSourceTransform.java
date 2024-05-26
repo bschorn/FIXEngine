@@ -1,4 +1,4 @@
-package com.vj.transform.field;
+package com.vj.transform.succession.field;
 
 import com.vj.model.attribute.InstrumentSource;
 import quickfix.field.SecurityIDSource;

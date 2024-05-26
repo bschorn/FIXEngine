@@ -12,7 +12,8 @@ public class LogConfig {
     public LogConfig(Class<?> parentClass) {
         // creates pattern layout
         PatternLayout layout = new PatternLayout();
-        String conversionPattern = "%-7p %d [%t] %c %x - %m%n";
+        //String conversionPattern = "%d %p %x - %m%n [%c %t]";
+        String conversionPattern = "%d %p [%C.%L %t] - %m%n";
         layout.setConversionPattern(conversionPattern);
 
         // creates console appender
@@ -28,7 +29,7 @@ public class LogConfig {
 
         // configures the root logger
         Logger rootLogger = Logger.getRootLogger();
-        rootLogger.setLevel(Level.DEBUG);
+        rootLogger.setLevel(Level.INFO);
         rootLogger.addAppender(consoleAppender);
         rootLogger.addAppender(fileAppender);
 
@@ -38,8 +39,11 @@ public class LogConfig {
     }
 
 
-
-
+    /**
+     * For testing...
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         new LogConfig(LogConfig.class);
     }

@@ -9,13 +9,13 @@ public interface MessageHandler<T> {
     void handle(T t, SessionID sessionID);
 
     /**
-     * The test(...) method determines if this is the appropriate handler for the Message and SessionID combination
+     * The isHandler(...) method determines if this is the appropriate handler for the Message and SessionID combination
      * presented.
      *
      * By default there will only be one handler per message but when there is more than one, implement the test(...) method to examine message to determine if it is yours.
      *
      */
-    default boolean test(T t, SessionID sessionID) {
+    default boolean isHandler(T t, SessionID sessionID) {
         return true;
     }
 

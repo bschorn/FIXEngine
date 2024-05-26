@@ -3036,6 +3036,6 @@
             <value enum="N" description="Leave original alone"/>
             <value enum="Y" description="Cancel original order if replacement fails"/>
         </field>
-        <field number="9730" description="LiquidityFlag" type="BOOLEAN"/>
+        <field number="9730" name="LiquidityFlag" type="BOOLEAN"/>
     </fields>
 </fix>

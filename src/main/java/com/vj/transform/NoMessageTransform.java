@@ -1,6 +1,7 @@
-package com.vj.transform.message;
+package com.vj.transform;
 
 import com.vj.model.entity.EquityOrder;
+import com.vj.transform.succession.message.MessageTransform;
 import quickfix.Message;
 import quickfix.SessionID;
 
