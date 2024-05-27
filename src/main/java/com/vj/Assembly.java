@@ -10,7 +10,7 @@ import com.vj.publisher.buyside.NewOrderSinglePublisher;
 import com.vj.publisher.buyside.OrderCancelReplaceRequestPublisher;
 import com.vj.publisher.buyside.OrderCancelRequestPublisher;
 import com.vj.publisher.OrderPublishers;
-import com.vj.publisher.sellside.ExecutionReportPublisher;
+import com.vj.publisher.sellside.*;
 import com.vj.service.ClientService;
 import com.vj.service.MarketService;
 import com.vj.service.OrderService;
@@ -37,9 +37,9 @@ import quickfix.fix42.OrderCancelRequest;
 public class Assembly {
 
     private final static boolean mocking = true;
-    private final static boolean sellside = System.getProperties().containsKey("sellside");
     private final static Assembly INSTANCE = new Assembly();
 
+    public final static boolean sellside = Boolean.valueOf(System.getProperty("sellside","false"));
     private final ClientService clients;
     private final OrderService orders;
     private final ProductService products;
@@ -90,6 +90,15 @@ public class Assembly {
             INSTANCE.handlers.register(new NewOrderSingleHandler(INSTANCE.transformers.message(NewOrderSingle.class), INSTANCE.validators.get(NewOrderSingle.class)));
             INSTANCE.handlers.register(new OrderCancelReplaceRequestHandler(INSTANCE.transformers.message(OrderCancelReplaceRequest.class)));
             INSTANCE.handlers.register(new OrderCancelRequestHandler(INSTANCE.transformers.message(OrderCancelRequest.class)));
+            INSTANCE.orderPublishers.register(new OrderAcceptedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new OrderRejectedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new AckCancelOrderPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new CancelOrderRejectedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new OrderCancelledPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new AckReplaceOrderPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new ReplaceOrderRejectedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new OrderReplacedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.orderPublishers.register(new OrderTradedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.orderPublishers.register(new ExecutionReportPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
         } else {
             INSTANCE.orderPublishers.register(new NewOrderSinglePublisher(INSTANCE.transformers.message(NewOrderSingle.class)));

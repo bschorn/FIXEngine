@@ -5,6 +5,7 @@ import com.vj.model.attribute.BrokerOrderId;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.model.entity.Order;
+import com.vj.service.OrderService;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.succession.field.OrdStatusTransform;
 import com.vj.transform.succession.message.MessageTransform;
@@ -57,6 +58,9 @@ public abstract class ExecutionReportHandler implements MessageHandler<Execution
         } catch (NoTransformationException nte) {
             Session.lookupSession(sessionID).getLog().onIncoming("ExecutionReport: " + nte.getMessage());
             log.error(nte.getMessage(), nte);
+        } catch (OrderService.NoOrderFoundException nofe) {
+            Session.lookupSession(sessionID).getLog().onIncoming("ExecutionReport: " + nofe.getMessage());
+            log.error(nofe.getMessage(), nofe);
         }
     }
 

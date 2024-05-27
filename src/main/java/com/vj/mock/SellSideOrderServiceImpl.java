@@ -58,8 +58,12 @@ public class SellSideOrderServiceImpl implements OrderService {
     }
 
     @Override
-    public <T extends Order> T find(ClientOrderId clientOrderId) {
-        return (T) clientOrderMap.get(clientOrderId);
+    public <T extends Order> T find(ClientOrderId clientOrderId) throws NoOrderFoundException {
+        T t = (T) clientOrderMap.get(clientOrderId);
+        if (t != null) {
+            return t;
+        }
+        throw new NoOrderFoundException(this.getClass().getSimpleName() + ".find() - no order found for ClientOrderId: " + clientOrderId.toString());
     }
 
     @Override

@@ -18,8 +18,8 @@ public class EquityOrder implements Order {
         if (data.orderState == null) {
             throw new RuntimeException(OrderState.class.getSimpleName() + " may not be null.");
         }
-        if (data.exchange == null) {
-            throw new RuntimeException(Exchange.class.getSimpleName() + " may not be null.");
+        if (data.broker == null) {
+            throw new RuntimeException(Broker.class.getSimpleName() + " may not be null.");
         }
         if (data.origClientOrderId == null) {
             throw new RuntimeException("Orig" + ClientOrderId.class.getSimpleName() + " may not be null.");
@@ -85,8 +85,8 @@ public class EquityOrder implements Order {
     }
 
     @Override
-    public Exchange exchange() {
-        return data.exchange;
+    public Broker broker() {
+        return data.broker;
     }
 
     @Override
@@ -182,7 +182,7 @@ public class EquityOrder implements Order {
                 .append(":")
                 .append(data.orderAction.name())
                 .append("] ")
-                .append(data.exchange)
+                .append(data.broker)
                 .append(" ")
                 .append(data.side)
                 .append(" ")
@@ -230,7 +230,7 @@ public class EquityOrder implements Order {
         Account account;
         Client client;
         Instrument instrument;
-        Exchange exchange;
+        Broker broker;
         LocalDate tradeDate;
         OrderType orderType;
         Side side;
@@ -307,8 +307,8 @@ public class EquityOrder implements Order {
             return this;
         }
 
-        public OrderCreator exchange(Exchange exchange) {
-            data.exchange = exchange;
+        public OrderCreator broker(Broker broker) {
+            data.broker = broker;
             return this;
         }
 
@@ -364,6 +364,8 @@ public class EquityOrder implements Order {
     public static class OrderModifier extends OrderClone {
         public OrderModifier(EquityOrder equityOrder) {
             super(equityOrder);
+            data.origClientOrderId = data.clientOrderId;
+            data.clientOrderId = new ClientOrderId(data.orderId, data.version);
         }
 
         public OrderModifier orderAction(OrderAction value) {

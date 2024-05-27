@@ -2,6 +2,8 @@ package com.vj;
 
 import com.vj.handler.MessageHandlers;
 import com.vj.manager.SessionManager;
+import com.vj.model.attribute.Account;
+import com.vj.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.ConfigError;
@@ -25,19 +27,34 @@ import quickfix.field.ApplVerID;
 public class Application implements quickfix.Application {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private SessionSettings settings;
     private MessageHandlers messageHandlers;
+    private ClientService clientService;
+    private boolean sellside;
 
     public Application(SessionSettings settings) throws ConfigError, FieldConvertError {
+        this.settings = settings;
         messageHandlers = Assembly.handlers();
+        clientService = Assembly.services().clients();
+        sellside = Assembly.sellside;
     }
 
     public void onCreate(SessionID sessionID) {
-        Session.lookupSession(sessionID).getLog().onEvent("Session Created");
+        log.info("onCreate: " + sessionID.toString());
     }
 
     public void onLogon(SessionID sessionID) {
+        log.info("onLogon: " + sessionID.toString());
         // this needs work unless there will only be one session (one broker connection per instance)
         SessionManager.setDefaultSessionId(sessionID);
+        if (sellside) {
+            try {
+                Account account = new Account(settings.getString(sessionID, "TargetAccount"));
+                clientService.register(sessionID.getTargetCompID(), account);
+            } catch (ConfigError e) {
+                log.error(e.getMessage(), e);
+            }
+        }
     }
 
     public void onLogout(SessionID sessionID) {
@@ -46,20 +63,21 @@ public class Application implements quickfix.Application {
     }
 
     public void toAdmin(Message message, SessionID sessionID) {
-        //TODO
+        log.info("toAdmin: " + sessionID.toString() + " " + message.toString());
     }
 
     public void toApp(Message message, SessionID sessionID) throws DoNotSend {
-        //TODO
+        log.info("toApp: " + sessionID.toString() + " " + message.toString());
     }
 
     public void fromAdmin(Message message, SessionID sessionID) throws FieldNotFound, IncorrectDataFormat,
             IncorrectTagValue, RejectLogon {
-        //TODO
+        log.info("fromAdmin: " + sessionID.toString() + " " + message.toString());
     }
 
     public void fromApp(Message message, SessionID sessionID) throws FieldNotFound, IncorrectDataFormat,
             IncorrectTagValue, UnsupportedMessageType {
+        log.info("fromApp: " + sessionID.toString() + " " + message.toString());
         messageHandlers.find(message, sessionID).handle(message, sessionID);
     }
 

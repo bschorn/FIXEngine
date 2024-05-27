@@ -72,7 +72,11 @@ public class BuySide {
             for (SessionID sessionId : initiator.getSessions()) {
                 Session.lookupSession(sessionId).logon();
                 try {
-                    Account sessionAccount = new Account(sessionSettings.getString(sessionId, "SenderAccount"));
+                    String senderAccount = sessionSettings.getString(sessionId, "SenderAccount");
+                    if (senderAccount == null) {
+                        log.error(this.getClass().getSimpleName() + ".logon() - SenderAccount was not set for session: " + sessionId.getSenderCompID());
+                    }
+                    Account sessionAccount = new Account(senderAccount);
                     clientService.register(sessionId.getSenderCompID(), sessionAccount);
                 } catch (ConfigError configError) {
                     log.error(configError.getMessage());
@@ -108,10 +112,7 @@ public class BuySide {
 
             boolean testing = Boolean.valueOf(System.getProperty("test", "false"));
             if (testing) {
-                TestScenarioOne tester = new TestScenarioOne(
-                        Assembly.services(),
-                        buySide.sessionID(),
-                        Account.getAccount());
+                TestScenarioOne tester = new TestScenarioOne(Assembly.services(), buySide.sessionID());
                 tester.run();
             } else {
                 System.out.println("press <enter> to quit");

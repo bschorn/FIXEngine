@@ -4,11 +4,13 @@ import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.publisher.OrderPublisher;
+import com.vj.service.OrderService;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.succession.message.NewOrderSingleTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.fix42.NewOrderSingle;
+import quickfix.fix42.OrderCancelReplaceRequest;
 
 /**
  * BuySide - NewOrderSingle
@@ -31,13 +33,18 @@ public class NewOrderSinglePublisher extends OrderPublisher<EquityOrder> {
     }
 
     @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + " sends a(n) " + NewOrderSingle.class.getSimpleName() + " when EquityOrder.orderAction() == OPEN";
+    }
+
+    @Override
     public void publish(EquityOrder equityOrder) {
         try {
             NewOrderSingle newOrderSingle = newOrderSingleTransform.outbound(equityOrder);
             // send quickfix Message to broker
             send(newOrderSingle, new Callback() {
                 @Override
-                public void onSuccess() {
+                public void onSuccess() throws OrderService.NoOrderFoundException {
                     // update order service with info that it's been sent
                     services().orders().update(
                             equityOrder.update()

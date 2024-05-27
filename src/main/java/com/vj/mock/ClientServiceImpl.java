@@ -21,12 +21,14 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void register(String fixCompId, Client client) {
+        log.info(this.getClass().getSimpleName() + ".register() - Register: fixCompId[" + fixCompId + "] to Client[" +client.toString() + "]");
         clientMap.put(fixCompId, client);
         clientReverseMap.put(client, fixCompId);
     }
 
     @Override
     public void register(String fixCompId, Account account) {
+        log.info(this.getClass().getSimpleName() + ".register() - Register: fixCompId[" + fixCompId + "] to Account[" +account.toString() + "]");
         accountMap.put(fixCompId, account);
     }
 

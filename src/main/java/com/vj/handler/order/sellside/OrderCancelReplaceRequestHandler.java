@@ -3,6 +3,7 @@ package com.vj.handler.order.sellside;
 import com.vj.handler.MessageHandler;
 import com.vj.model.attribute.OrderAction;
 import com.vj.model.entity.EquityOrder;
+import com.vj.service.OrderService;
 import com.vj.transform.succession.message.OrderCancelReplaceRequestTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,9 @@ public class OrderCancelReplaceRequestHandler implements MessageHandler<OrderCan
         } catch (FieldNotFound fnf) {
             // TODO: handle exception
             log.error(fnf.getMessage(), fnf);
+        } catch (OrderService.NoOrderFoundException nofe) {
+            // TODO: handle exception
+            log.error(nofe.getMessage(), nofe);
         }
 
     }

@@ -2,6 +2,7 @@ package com.vj.transform.succession.message;
 
 import com.vj.model.attribute.*;
 import com.vj.model.entity.EquityOrder;
+import com.vj.service.ClientService;
 import com.vj.service.Services;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.Transformers;
@@ -36,7 +37,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
      * Sell-Side
      */
     @Override
-    public EquityOrder inbound(NewOrderSingle newOrderSingle, SessionID sessionID, Object... objects) throws FieldNotFound, NoTransformationException {
+    public EquityOrder inbound(NewOrderSingle newOrderSingle, SessionID sessionID, Object... objects) throws FieldNotFound, NoTransformationException, ClientService.NoClientFoundException {
         // this is a kludge
         if (objects.length == 0 || !(objects[0] instanceof OrderId)) {
             throw new RuntimeException(this.getClass().getSimpleName() + ".inbound(...) requires third paramater to be an OrderId.");
@@ -52,7 +53,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
                 .orderType(ordTypeTransform.inbound(newOrderSingle.getOrdType()))
                 .side(sideTransform.inbound(newOrderSingle.getSide()))
                 .instrument(services.products().find(securityIDSourceTransform.inbound(newOrderSingle.getSecurityIDSource()), newOrderSingle.getSecurityID().getValue()))
-                .exchange(exDestinationTransform.inbound(newOrderSingle.getExDestination()))
+                .broker(exDestinationTransform.inbound(newOrderSingle.getExDestination()))
                 .orderQty(newOrderSingle.getOrderQty().getValue())
                 .limitPrice(newOrderSingle.getPrice().getValue())
                 .end();
@@ -72,7 +73,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
         message.set(new OrderQty(equityOrder.orderQty()));
         message.set(new Price(equityOrder.limitPrice()));
         message.set(ordTypeTransform.outbound(equityOrder.orderType()));
-        message.set(exDestinationTransform.outbound(equityOrder.exchange())); // this probably shouldn't come from the order
+        message.set(exDestinationTransform.outbound(equityOrder.broker())); // this probably shouldn't come from the order
         // optional
         message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
         message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));

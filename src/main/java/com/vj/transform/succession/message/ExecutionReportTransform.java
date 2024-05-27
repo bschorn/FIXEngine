@@ -3,6 +3,7 @@ package com.vj.transform.succession.message;
 import com.vj.model.attribute.ClientOrderId;
 import com.vj.model.attribute.InstrumentSource;
 import com.vj.model.entity.EquityOrder;
+import com.vj.service.OrderService;
 import com.vj.service.Services;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.Transformers;
@@ -16,6 +17,7 @@ import quickfix.field.*;
 import quickfix.fix42.ExecutionReport;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class ExecutionReportTransform implements MessageTransform<ExecutionReport,EquityOrder> {
 
@@ -37,7 +39,7 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
      * BuySide
      */
     @Override
-    public EquityOrder inbound(ExecutionReport executionReport, SessionID sessionID, Object...objects) throws FieldNotFound {
+    public EquityOrder inbound(ExecutionReport executionReport, SessionID sessionID, Object...objects) throws FieldNotFound, OrderService.NoOrderFoundException {
         return services.orders().find(new ClientOrderId(executionReport.getClOrdID().getValue()));
     }
 
@@ -48,16 +50,26 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
     public ExecutionReport outbound(EquityOrder equityOrder) throws NoTransformationException {
         ExecutionReport message = new ExecutionReport();
         message.set(new Account(equityOrder.account().asValue()));
+        //message.set(new ExecType(ExecType.NEW));
+        message.set(ordStatusTransform.outbound(equityOrder.orderState()));
+        message.set(new OrderID(equityOrder.id().toString()));
+        message.set(new ClOrdID(equityOrder.clientOrderId().asValue()));
+        message.set(new ExecID(UUID.randomUUID().toString()));
+        message.set(new ExecBroker(equityOrder.broker().asValue()));
+        message.set(new ExecTransType('0')); // '0'-Normal
         message.set(new Symbol(equityOrder.instrument().toString()));
+        message.set(sideTransform.outbound(equityOrder.side()));
         message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
         message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));
-        message.set(sideTransform.outbound(equityOrder.side()));
-        message.set(new ClOrdID(equityOrder.clientOrderId().asValue()));
         message.set(new OrderQty(equityOrder.orderQty()));
-        message.set(new Price(equityOrder.limitPrice()));
         message.set(ordTypeTransform.outbound(equityOrder.orderType()));
+        message.set(new Price(equityOrder.limitPrice()));
+        message.set(new LastQty(0.0));
+        message.set(new LastPx(0.0));
+        message.set(new LeavesQty(equityOrder.unfilledQty()));
+        message.set(new CumQty(equityOrder.filledQty()));
+        message.set(new AvgPx(equityOrder.filledPrice()));
         message.set(new TransactTime(LocalDateTime.now()));
-        message.set(ordStatusTransform.outbound(equityOrder.orderState()));
         return message;
     }
 

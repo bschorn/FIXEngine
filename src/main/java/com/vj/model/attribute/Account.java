@@ -15,5 +15,4 @@ public class Account extends StringAttribute {
         }
         return INSTANCE;
     }
-
 }

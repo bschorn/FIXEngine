@@ -1,5 +1,7 @@
 package com.vj.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.SessionID;
@@ -17,6 +19,8 @@ import java.util.Map;
  *
  */
 public class MessageHandlers {
+
+    private static final Logger log = LoggerFactory.getLogger(MessageHandlers.class);
 
     private final Map<String, List<MessageHandler>> messageMap = new HashMap<>();
 
@@ -43,6 +47,7 @@ public class MessageHandlers {
     }
 
     public void register(MessageHandler messageHandler) {
+        log.info(this.getClass().getSimpleName() + ".register() - Register: MessageHandler[" + messageHandler + "]");
         List<MessageHandler> list = messageMap.getOrDefault(messageHandler.msgType(), new ArrayList<>());
         list.add(messageHandler);
         messageMap.put(messageHandler.msgType(), list);

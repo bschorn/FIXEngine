@@ -2,6 +2,7 @@ package com.vj.transform.succession.message;
 
 import com.vj.model.attribute.ClientOrderId;
 import com.vj.model.entity.EquityOrder;
+import com.vj.service.OrderService;
 import com.vj.service.Services;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.Transformers;
@@ -31,7 +32,7 @@ public class OrderCancelReplaceRequestTransform implements MessageTransform<Orde
      * Sell-Side
      */
     @Override
-    public EquityOrder inbound(OrderCancelReplaceRequest message, SessionID sessionID, Object... objects) throws FieldNotFound {
+    public EquityOrder inbound(OrderCancelReplaceRequest message, SessionID sessionID, Object... objects) throws FieldNotFound, OrderService.NoOrderFoundException {
         return services.orders().find(new ClientOrderId(message.getClOrdID().getValue()));
     }
 

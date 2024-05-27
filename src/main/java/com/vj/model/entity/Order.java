@@ -17,7 +17,7 @@ public interface Order {
     ClientOrderId origClientOrderId();
     LocalDate tradeDate();
     Instrument instrument();
-    Exchange exchange();
+    Broker broker();
     OrderType orderType();
     Side side();
     Instant createdTS();

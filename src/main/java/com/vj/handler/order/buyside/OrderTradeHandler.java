@@ -2,6 +2,7 @@ package com.vj.handler.order.buyside;
 
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
+import com.vj.service.OrderService;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.succession.message.MessageTransform;
 import org.slf4j.Logger;
@@ -59,6 +60,10 @@ public class OrderTradeHandler extends ExecutionReportHandler {
             Session.lookupSession(sessionID).getLog().onIncoming("ExecutionReport: " + nte.getMessage());
             // TODO: handle exception
             log.error(nte.getMessage(), nte);
+        } catch (OrderService.NoOrderFoundException nofe) {
+            Session.lookupSession(sessionID).getLog().onIncoming("ExecutionReport: " + nofe.getMessage());
+            // TODO: handle exception
+            log.error(nofe.getMessage(), nofe);
         }
     }
 
