@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="XMLConfigTest">
+    <Properties>
+        <Property name="filename">log/SellSide.log</Property>
+    </Properties>
+
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%d %p [%C.%L %t] - %m%n"/>
+        </Appender>
+        <Appender type="File" name="File" fileName="${filename}">
+            <Layout type="PatternLayout" pattern="%d %p [%C.%L %t] - %m%n"/>
+        </Appender>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.vj" level="debug" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

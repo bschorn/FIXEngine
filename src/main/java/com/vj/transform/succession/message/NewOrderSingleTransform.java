@@ -37,18 +37,12 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
      * Sell-Side
      */
     @Override
-    public EquityOrder inbound(NewOrderSingle newOrderSingle, SessionID sessionID, Object... objects) throws FieldNotFound, NoTransformationException, ClientService.NoClientFoundException {
-        // this is a kludge
-        if (objects.length == 0 || !(objects[0] instanceof OrderId)) {
-            throw new RuntimeException(this.getClass().getSimpleName() + ".inbound(...) requires third paramater to be an OrderId.");
-        }
-        OrderId orderId = (OrderId) objects[0];
-        // end of kludge
-
+    public EquityOrder inbound(NewOrderSingle newOrderSingle, SessionID sessionID, Object...objects) throws FieldNotFound, NoTransformationException, ClientService.NoClientFoundException {
         Client client = services.clients().lookupClient(sessionID.getTargetCompID());
-        return EquityOrder.create(orderId, client)
+        ClientOrderId clientOrderId = new ClientOrderId(newOrderSingle.getClOrdID().getValue());
+        return EquityOrder.replicate(services.orders().nextId(), client, clientOrderId)
                 .orderState(OrderState.OPEN)
-                .orderAction(OrderAction.OPEN)
+                .orderAction(OrderAction.ACCEPT_OPEN)
                 .account(new com.vj.model.attribute.Account(newOrderSingle.getAccount().getValue()))
                 .orderType(ordTypeTransform.inbound(newOrderSingle.getOrdType()))
                 .side(sideTransform.inbound(newOrderSingle.getSide()))

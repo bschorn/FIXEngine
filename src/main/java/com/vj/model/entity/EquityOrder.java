@@ -5,9 +5,7 @@ import com.vj.model.attribute.*;
 import java.time.Instant;
 import java.time.LocalDate;
 
-public class EquityOrder implements Order {
-
-
+public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder.OrderUpdater> {
     private final Data data;
 
     private EquityOrder(Data data) {
@@ -155,6 +153,11 @@ public class EquityOrder implements Order {
     }
 
     @Override
+    public String error() {
+        return data.error == null ? "" : data.error;
+    }
+
+    @Override
     public Order modify(OrderAction orderAction) {
         return this.modify().orderAction(orderAction).end();
     }
@@ -208,8 +211,16 @@ public class EquityOrder implements Order {
     }
 
     /**
+     * Order Replication
+     */
+    public static OrderReplicator replicate(OrderId orderId, Client client, ClientOrderId clientOrderId) {
+        return new OrderReplicator(orderId, client, clientOrderId);
+    }
+
+    /**
      * Modify Order for Publishing (outbound)
      */
+    @Override
     public OrderModifier modify() {
         return new OrderModifier(this);
     }
@@ -217,6 +228,7 @@ public class EquityOrder implements Order {
     /**
      * Update Order from Report (inbound)
      */
+    @Override
     public OrderUpdater update() {
         return new OrderUpdater(this);
     }
@@ -258,6 +270,8 @@ public class EquityOrder implements Order {
         // What do we want to do now?
         OrderAction orderAction;
 
+        String error = null;
+
         @Override
         public Object clone() {
             try {
@@ -274,7 +288,7 @@ public class EquityOrder implements Order {
      * Initial order creation
      */
     public static class OrderCreator {
-        private final Data data = new Data();
+        protected final Data data = new Data();
 
         public OrderCreator(OrderId orderId, Client client) {
             data.orderId = orderId;
@@ -345,6 +359,19 @@ public class EquityOrder implements Order {
     }
 
     /**
+     * Inbound
+     * <p>
+     * Order replication
+     */
+    public static class OrderReplicator extends OrderCreator {
+        public OrderReplicator(OrderId orderId, Client client, ClientOrderId clientOrderId) {
+            super(orderId, client);
+            data.clientOrderId = clientOrderId;
+            data.origClientOrderId = data.clientOrderId;
+        }
+    }
+
+    /**
      * Clone for the next Order event
      */
     private static abstract class OrderClone {
@@ -353,6 +380,7 @@ public class EquityOrder implements Order {
         public OrderClone(EquityOrder equityOrder) {
             data = (Data) equityOrder.data.clone();
             data.version = equityOrder.data.version.getNext();
+            data.error = null;
         }
     }
 
@@ -364,12 +392,17 @@ public class EquityOrder implements Order {
     public static class OrderModifier extends OrderClone {
         public OrderModifier(EquityOrder equityOrder) {
             super(equityOrder);
-            data.origClientOrderId = data.clientOrderId;
-            data.clientOrderId = new ClientOrderId(data.orderId, data.version);
         }
 
         public OrderModifier orderAction(OrderAction value) {
             data.orderAction = value;
+            switch (data.orderAction) {
+                case REPLACE:
+                case CANCEL:
+                    data.origClientOrderId = data.clientOrderId;
+                    data.clientOrderId = new ClientOrderId(data.orderId, data.version);
+                    break;
+            }
             return this;
         }
 
@@ -421,6 +454,11 @@ public class EquityOrder implements Order {
 
         public OrderUpdater avgFillPrice(double value) {
             data.filledPrice = value;
+            return this;
+        }
+
+        public OrderUpdater error(String error) {
+            this.data.error = error;
             return this;
         }
 

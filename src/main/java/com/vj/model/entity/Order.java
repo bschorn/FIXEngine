@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 
-public interface Order {
+public interface Order<M,U> {
 
     OrderId id();
     Account account();
@@ -31,6 +31,7 @@ public interface Order {
     double unfilledQty();
     OrderAction orderAction();
     OrderState orderState();
+    String error();
 
 
     /**
@@ -42,4 +43,16 @@ public interface Order {
      * After an inbound message received
      */
     Order update(OrderState orderState);
+
+    /**
+     * Modify is a request to modify and will create a new ClientOrderId
+     *
+     */
+    M modify();
+
+    /**
+     * Update is a synchronization and will get ClientOrderId from source.
+     *
+     */
+    U update();
 }

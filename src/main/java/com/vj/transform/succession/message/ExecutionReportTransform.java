@@ -40,7 +40,8 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
      */
     @Override
     public EquityOrder inbound(ExecutionReport executionReport, SessionID sessionID, Object...objects) throws FieldNotFound, OrderService.NoOrderFoundException {
-        return services.orders().find(new ClientOrderId(executionReport.getClOrdID().getValue()));
+        EquityOrder currentOrder = services.orders().find(new ClientOrderId(executionReport.getClOrdID().getValue()));
+        return currentOrder;
     }
 
     /**

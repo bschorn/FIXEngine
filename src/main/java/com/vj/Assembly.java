@@ -1,6 +1,7 @@
 package com.vj;
 
 import com.vj.handler.MessageHandlers;
+import com.vj.handler.order.buyside.OrderAcceptHandler;
 import com.vj.handler.order.buyside.OrderDefaultHandler;
 import com.vj.handler.order.buyside.OrderTradeHandler;
 import com.vj.handler.order.sellside.NewOrderSingleHandler;
@@ -23,10 +24,7 @@ import com.vj.validator.Validators;
 import com.vj.validator.order.equity.NewOrderSingleValidator;
 import com.vj.validator.order.equity.OrderCancelReplaceRequestValidator;
 import quickfix.field.*;
-import quickfix.fix42.ExecutionReport;
-import quickfix.fix42.NewOrderSingle;
-import quickfix.fix42.OrderCancelReplaceRequest;
-import quickfix.fix42.OrderCancelRequest;
+import quickfix.fix42.*;
 
 /**
  * Manual Dependency Injection
@@ -37,9 +35,9 @@ import quickfix.fix42.OrderCancelRequest;
 public class Assembly {
 
     private final static boolean mocking = true;
+    public final static boolean sellside = Boolean.valueOf(System.getProperty("sellside","false"));
     private final static Assembly INSTANCE = new Assembly();
 
-    public final static boolean sellside = Boolean.valueOf(System.getProperty("sellside","false"));
     private final ClientService clients;
     private final OrderService orders;
     private final ProductService products;
@@ -79,6 +77,7 @@ public class Assembly {
         transformers.register(NewOrderSingle.class, new com.vj.transform.succession.message.NewOrderSingleTransform(services, transformers));
         transformers.register(OrderCancelRequest.class, new com.vj.transform.succession.message.OrderCancelRequestTransform(services, transformers));
         transformers.register(OrderCancelReplaceRequest.class, new com.vj.transform.succession.message.OrderCancelReplaceRequestTransform(services, transformers));
+        transformers.register(OrderCancelReject.class, new com.vj.transform.succession.message.OrderCancelRejectTransform(services, transformers));
         transformers.register(ExecutionReport.class, new com.vj.transform.succession.message.ExecutionReportTransform(services, transformers));
         // validators - messages
         validators.register(NewOrderSingle.class, new NewOrderSingleValidator());
@@ -93,17 +92,15 @@ public class Assembly {
             INSTANCE.orderPublishers.register(new OrderAcceptedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.orderPublishers.register(new OrderRejectedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.orderPublishers.register(new AckCancelOrderPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
-            INSTANCE.orderPublishers.register(new CancelOrderRejectedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.orderPublishers.register(new OrderCancelledPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
-            INSTANCE.orderPublishers.register(new AckReplaceOrderPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
-            INSTANCE.orderPublishers.register(new ReplaceOrderRejectedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.orderPublishers.register(new OrderReplacedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.orderPublishers.register(new OrderTradedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
-            INSTANCE.orderPublishers.register(new ExecutionReportPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
+            //INSTANCE.orderPublishers.register(new ExecutionReportPublisher(INSTANCE.transformers.message(ExecutionReport.class)));
         } else {
             INSTANCE.orderPublishers.register(new NewOrderSinglePublisher(INSTANCE.transformers.message(NewOrderSingle.class)));
             INSTANCE.orderPublishers.register(new OrderCancelRequestPublisher(INSTANCE.transformers.message(OrderCancelRequest.class)));
             INSTANCE.orderPublishers.register(new OrderCancelReplaceRequestPublisher(INSTANCE.transformers.message(OrderCancelReplaceRequest.class)));
+            INSTANCE.handlers.register(new OrderAcceptHandler(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.handlers.register(new OrderTradeHandler(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.handlers.register(new OrderDefaultHandler(INSTANCE.transformers.message(ExecutionReport.class)));
         }

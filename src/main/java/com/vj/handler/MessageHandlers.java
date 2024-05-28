@@ -24,26 +24,31 @@ public class MessageHandlers {
 
     private final Map<String, List<MessageHandler>> messageMap = new HashMap<>();
 
-    public <T> MessageHandler<T> find(Message message, SessionID sessionID) {
+    public <T> MessageHandler<T> find(Message message, SessionID sessionID) throws NoMessageHandlerException {
         try {
             List<MessageHandler> list = messageMap.get(message.getHeader().getString(MsgType.FIELD));
             if (list == null) {
                 throw new RuntimeException(MessageHandler.class.getSimpleName() + ".find() - there are no message handlers for " + message.getHeader().getString(MsgType.FIELD));
             }
+            MessageHandler messageHandler = null;
             if (list.size() == 1) {
-                return list.get(0);
-            }
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).isHandler(message, sessionID)) {
-                    return list.get(i);
+                messageHandler = list.get(0);
+            } else {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).isHandler(message, sessionID)) {
+                        messageHandler = list.get(i);
+                        break;
+                    }
                 }
             }
-
+            if (messageHandler != null) {
+                log.info(this.getClass().getSimpleName() + ".find() - " + messageHandler.getClass().getSimpleName() + " to handle: " + message);
+                return messageHandler;
+            }
+            throw new NoMessageHandlerException("No message handler found for Message: " + message);
         } catch (FieldNotFound e) {
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     public void register(MessageHandler messageHandler) {
@@ -55,5 +60,11 @@ public class MessageHandlers {
 
     public int size() {
         return messageMap.size();
+    }
+
+    public static class NoMessageHandlerException extends Exception {
+        public NoMessageHandlerException(String message) {
+            super(message);
+        }
     }
 }

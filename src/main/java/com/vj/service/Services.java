@@ -1,6 +1,11 @@
 package com.vj.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Services {
+
+    private static final Logger log = LoggerFactory.getLogger(Services.class);
 
     private final ClientService clients;
     private final OrderService orders;
@@ -12,6 +17,10 @@ public class Services {
         this.orders = orders;
         this.products = products;
         this.markets = markets;
+        log.info(this.getClass().getSimpleName() + ".ctor() - ClientService: " + clients.getClass().getSimpleName());
+        log.info(this.getClass().getSimpleName() + ".ctor() - OrderService: " + orders.getClass().getSimpleName());
+        log.info(this.getClass().getSimpleName() + ".ctor() - ProductService: " + products.getClass().getSimpleName());
+        log.info(this.getClass().getSimpleName() + ".ctor() - MarketService: " + markets.getClass().getSimpleName());
     }
 
     public ClientService clients() {

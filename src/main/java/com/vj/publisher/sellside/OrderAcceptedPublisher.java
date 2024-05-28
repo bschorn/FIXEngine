@@ -33,7 +33,7 @@ public class OrderAcceptedPublisher extends OrderPublisher<EquityOrder> {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " sends a(n) " + ExecutionReport.class.getSimpleName() + " when EquityOrder.orderAction() == OPEN";
+        return this.getClass().getSimpleName() + " sends a(n) " + ExecutionReport.class.getSimpleName() + " when EquityOrder.orderAction() == ACCEPT_OPEN";
     }
 
     @Override

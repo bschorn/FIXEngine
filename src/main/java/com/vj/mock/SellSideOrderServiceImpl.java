@@ -1,6 +1,7 @@
 package com.vj.mock;
 
 import com.vj.model.attribute.ClientOrderId;
+import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderId;
 import com.vj.model.entity.Order;
 import com.vj.publisher.OrderPublishers;
@@ -11,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Sell-side implementation
+ */
 public class SellSideOrderServiceImpl implements OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(SellSideOrderServiceImpl.class);
@@ -18,7 +22,7 @@ public class SellSideOrderServiceImpl implements OrderService {
     private final AtomicLong nextOrderId = new AtomicLong(2000000);
 
     private final OrderPublishers orderPublishers;
-    private final Map<OrderId, LinkedList<Order>> orderHistoryMap = new HashMap<>();
+    //private final Map<OrderId, LinkedList<Order>> orderHistoryMap = new HashMap<>();
     private final Map<ClientOrderId, Order> clientOrderMap = new HashMap<>();
 
     public SellSideOrderServiceImpl(OrderPublishers orderPublishers) {
@@ -32,28 +36,21 @@ public class SellSideOrderServiceImpl implements OrderService {
 
     @Override
     public void submit(Order order) {
-        if (orderHistoryMap.containsKey(order.id())) {
-            throw new RuntimeException("You can not reuse OrderId or submit the same order twice.");
-        }
-        LinkedList<Order> orderHistory = new LinkedList<>();
-        orderHistory.add(order);
-        this.orderHistoryMap.put(order.id(), orderHistory);
+        log.info(this.getClass().getSimpleName() + ".submit() - " + order);
         this.clientOrderMap.put(order.clientOrderId(), order);
         orderPublishers.find(order).publish(order);
     }
 
     @Override
     public void modify(Order order) {
-        LinkedList<Order> orderHistory = orderHistoryMap.get(order.id());
-        orderHistory.add(order);
+        log.info(this.getClass().getSimpleName() + ".modify() - " + order);
         this.clientOrderMap.put(order.clientOrderId(), order);
         orderPublishers.find(order).publish(order);
     }
 
     @Override
     public void update(Order order) {
-        LinkedList<Order> orderHistory = orderHistoryMap.get(order.id());
-        orderHistory.add(order);
+        log.info(this.getClass().getSimpleName() + ".update() - " + order);
         this.clientOrderMap.put(order.clientOrderId(), order);
     }
 
@@ -68,16 +65,12 @@ public class SellSideOrderServiceImpl implements OrderService {
 
     @Override
     public <T extends Order> List<T> getHistory(OrderId orderId) {
-        return (List<T>) orderHistoryMap.get(orderId);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Order find(OrderId orderId) {
-        LinkedList<Order> orderHistory = orderHistoryMap.get(orderId);
-        if (orderHistory != null) {
-            return orderHistory.getLast();
-        }
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 }

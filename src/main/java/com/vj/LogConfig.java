@@ -1,15 +1,16 @@
 package com.vj;
 
-
+/*
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-
+*/
 public class LogConfig {
 
     public LogConfig(Class<?> parentClass) {
+        /*
         // creates pattern layout
         PatternLayout layout = new PatternLayout();
         //String conversionPattern = "%d %p %x - %m%n [%c %t]";
@@ -36,6 +37,7 @@ public class LogConfig {
         // creates a custom logger and log messages
         Logger logger = Logger.getLogger(LogConfig.class);
         logger.info(this.getClass().getSimpleName() + " log configuration initialized.");
+        */
     }
 
 
@@ -44,7 +46,7 @@ public class LogConfig {
      *
      * @param args
      */
-    public static void main(String[] args) {
-        new LogConfig(LogConfig.class);
-    }
+    //public static void main(String[] args) {
+        //new LogConfig(LogConfig.class);
+    //}
 }

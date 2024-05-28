@@ -42,11 +42,11 @@ public abstract class ExecutionReportHandler implements MessageHandler<Execution
     public void handle(ExecutionReport executionReport, SessionID sessionID) {
         try {
             // Retrieve the current version of the order for this executionReport
-            EquityOrder equityOrder = executionReportTransform().inbound(executionReport, sessionID);
+            EquityOrder currenOrder = executionReportTransform().inbound(executionReport, sessionID);
             // Transform the OrderStatus into OrderState
             OrderState newOrderState = executionReportTransform().orderStateTransform().inbound(executionReport.getOrdStatus());
             // create new version of order
-            Order updatedOrder = equityOrder.update()
+            Order updatedOrder = currenOrder.update()
                     .orderState(newOrderState)
                     .brokerOrderId(new BrokerOrderId(executionReport.getOrderID().getValue()))
                     .end();

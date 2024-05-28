@@ -32,11 +32,11 @@ public class Application implements quickfix.Application {
     private ClientService clientService;
     private boolean sellside;
 
-    public Application(SessionSettings settings) throws ConfigError, FieldConvertError {
+    public Application(SessionSettings settings, boolean sellside) throws ConfigError, FieldConvertError {
         this.settings = settings;
+        this.sellside = sellside;
         messageHandlers = Assembly.handlers();
         clientService = Assembly.services().clients();
-        sellside = Assembly.sellside;
     }
 
     public void onCreate(SessionID sessionID) {
@@ -78,9 +78,14 @@ public class Application implements quickfix.Application {
     public void fromApp(Message message, SessionID sessionID) throws FieldNotFound, IncorrectDataFormat,
             IncorrectTagValue, UnsupportedMessageType {
         log.info("fromApp: " + sessionID.toString() + " " + message.toString());
-        messageHandlers.find(message, sessionID).handle(message, sessionID);
+        try {
+            messageHandlers.find(message, sessionID).handle(message, sessionID);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
     }
 
+    /* - save for use as an example
     private void sendMessage(SessionID sessionID, Message message) {
         try {
             Session session = Session.lookupSession(sessionID);
@@ -108,6 +113,6 @@ public class Application implements quickfix.Application {
     private ApplVerID getApplVerID(Session session) {
         return MessageUtils.toApplVerID(session.getSessionID().getBeginString());
     }
-
+    */
 
 }

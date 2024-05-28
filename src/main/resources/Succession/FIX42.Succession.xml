@@ -12,6 +12,7 @@
         <field name="SendingTime" required="Y"/>
         <field name="OrigSendingTime" required="N"/>
         <field name="PossDupFlag" required="N"/>
+        <field name="PossDupFlag" required="N"/>
         <field name="PossResend" required="N"/>
         <field name="LastMsgSeqNumProcessed" required="N"/>
     </header>
@@ -584,32 +585,7 @@
             <value enum="6" description="PEM_DES_MD5"/>
         </field>
         <field number="99" name="StopPx" type="PRICE"/>
-        <field number="100" name="ExDestination" type="EXCHANGE">
-            <value enum="BATS" description="CBOE_BATS_BZX"/>
-            <value enum="BYX" description="CBOE_BATS_BYX"/>
-            <value enum="EDGA" description="CBOE_EDGA"/>
-            <value enum="EDGX" description="CBOE_EDGX"/>
-            <value enum="IEXG" description="INVESTORS_EXCHANGE"/>
-            <value enum="MEMX" description="MEMBERS_EXCHANGE"/>
-            <value enum="INET" description="NASDAQ"/>
-            <value enum="NQBX" description="NASDAQ_OMX_BX"/>
-            <value enum="NQPX" description="NASDAQ_OMX_PSX"/>
-            <value enum="NYSE" description="NYSE"/>
-            <value enum="ARCA" description="NYSE_ARCA"/>
-            <value enum="XASE" description="NYSE_AM_EQ"/>
-            <value enum="NCCG" description="NYSE_LEGACY_CCG"/>
-            <value enum="N3PP" description="NYSE_3RD_PTY_ALGO_PARENT"/>
-            <value enum="N3PA" description="NYSE_3RD_PTY_ALGO_CHILD"/>
-            <value enum="CPEM" description="CLEARPOOL_GROUP"/>
-            <value enum="CODA" description="CODA_MKT_ATS"/>
-            <value enum="VAES" description="FIS_FOX_RIVER"/>
-            <value enum="HRTX" description="HUDSON_RIVER"/>
-            <value enum="INCA" description="INSTINET"/>
-            <value enum="JSJX" description="JANE_STREET"/>
-            <value enum="LYNX" description="LYNX_CAPITAL"/>
-            <value enum="OTCX" description="OTC_LINK_ECN"/>
-            <value enum="SPDR" description="SPEED_ROUTE"/>
-        </field>
+        <field number="100" name="ExDestination" type="EXCHANGE"/>
         <field number="102" name="CxlRejReason" type="INT">
             <value enum="0" description="TOO_LATE_TO_CANCEL"/>
             <value enum="1" description="UNKNOWN_ORDER"/>

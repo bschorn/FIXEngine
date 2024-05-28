@@ -19,6 +19,8 @@ public class OrderPublishers {
     public OrderPublisher find(Order order) {
         for (int i = 0; i < publisherList.size(); i++) {
             if (publisherList.get(i).isPublisher(order)) {
+                OrderPublisher orderPublisher = publisherList.get(i);
+                log.info(this.getClass().getSimpleName() + ".find() - " + orderPublisher.getClass().getSimpleName() + " to publish: " + order);
                 return publisherList.get(i);
             }
         }

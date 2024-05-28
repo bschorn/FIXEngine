@@ -7,8 +7,7 @@ import com.vj.service.Services;
 public interface EntityPublisher<T> {
 
     /**
-     * Is this instance the correct publisher for this entity?
-     *
+     * Is this the correct publisher for this entity T?
      */
     default boolean isPublisher(T t) {
         return true;

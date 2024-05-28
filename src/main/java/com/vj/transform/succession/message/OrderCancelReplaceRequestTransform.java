@@ -33,7 +33,7 @@ public class OrderCancelReplaceRequestTransform implements MessageTransform<Orde
      */
     @Override
     public EquityOrder inbound(OrderCancelReplaceRequest message, SessionID sessionID, Object... objects) throws FieldNotFound, OrderService.NoOrderFoundException {
-        return services.orders().find(new ClientOrderId(message.getClOrdID().getValue()));
+        return services.orders().find(new ClientOrderId(message.getOrigClOrdID().getValue()));
     }
 
     /**
@@ -43,6 +43,7 @@ public class OrderCancelReplaceRequestTransform implements MessageTransform<Orde
     public OrderCancelReplaceRequest outbound(EquityOrder equityOrder) throws NoTransformationException {
         OrderCancelReplaceRequest message = new OrderCancelReplaceRequest();
         // required
+        message.set(new Account(equityOrder.account().asValue()));
         message.set(new ClOrdID(equityOrder.clientOrderId().asValue()));
         message.set(new OrigClOrdID(equityOrder.origClientOrderId().asValue()));
         message.set(sideTransform.outbound(equityOrder.side()));

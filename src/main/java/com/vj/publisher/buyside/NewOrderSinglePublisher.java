@@ -10,7 +10,6 @@ import com.vj.transform.succession.message.NewOrderSingleTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.fix42.NewOrderSingle;
-import quickfix.fix42.OrderCancelReplaceRequest;
 
 /**
  * BuySide - NewOrderSingle
@@ -27,6 +26,9 @@ public class NewOrderSinglePublisher extends OrderPublisher<EquityOrder> {
         this.newOrderSingleTransform = newOrderSingleTransform;
     }
 
+    /**
+     * Is this the correct publisher for this EquityOrder?
+     */
     @Override
     public boolean isPublisher(EquityOrder equityOrder) {
         return equityOrder.orderAction() == OrderAction.OPEN;
@@ -41,26 +43,38 @@ public class NewOrderSinglePublisher extends OrderPublisher<EquityOrder> {
     public void publish(EquityOrder equityOrder) {
         try {
             NewOrderSingle newOrderSingle = newOrderSingleTransform.outbound(equityOrder);
+            EquityOrder sentOrder = equityOrder.update()
+                    .orderState(OrderState.OPEN_SENT)
+                    .orderAction(OrderAction.WAIT)
+                    .end();
             // send quickfix Message to broker
             send(newOrderSingle, new Callback() {
                 @Override
                 public void onSuccess() throws OrderService.NoOrderFoundException {
                     // update order service with info that it's been sent
-                    services().orders().update(
-                            equityOrder.update()
-                                    .orderState(OrderState.OPEN_SENT)
-                                    .orderAction(OrderAction.NONE)
-                                    .end());
+                    services().orders().update(sentOrder);
                 }
 
                 @Override
                 public void onException(Exception exception) {
-                    //TODO handle exception
-                    log.error(exception.getMessage());
+                    if (exception instanceof OrderService.NoOrderFoundException) {
+                        log.error(exception.getMessage());
+                    } else {
+                        try {
+                            services().orders().update(equityOrder.update()
+                                    .orderState(OrderState.OPEN_ERR)
+                                    .orderAction(OrderAction.WAIT)
+                                    .error(exception.getMessage())
+                                    .end());
+                        } catch (OrderService.NoOrderFoundException nofe) {
+                            log.error(exception.getMessage());
+                        }
+                    }
                 }
             });
         } catch (NoTransformationException nte) {
             log.error(nte.getMessage(), nte);
         }
     }
+
 }

@@ -29,12 +29,17 @@ public class OrderRejectedPublisher extends OrderPublisher<EquityOrder> {
 
     @Override
     public boolean isPublisher(EquityOrder equityOrder) {
-        return equityOrder.orderState() == OrderState.REJECTED;
+        switch (equityOrder.orderAction()) {
+            case REJECT_OPEN:
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " sends a(n) " + ExecutionReport.class.getSimpleName() + " when EquityOrder.orderState() == REJECTED";
+        return this.getClass().getSimpleName() + " sends a(n) " + ExecutionReport.class.getSimpleName() + " when EquityOrder.orderAction() == REJECT_*";
     }
 
     @Override

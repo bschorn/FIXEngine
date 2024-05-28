@@ -24,4 +24,17 @@ public abstract class StringAttribute implements Attribute<String>, Comparable<S
     public String toString() {
         return value;
     }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof StringAttribute) {
+            return value.equals(((StringAttribute) other).value);
+        }
+        return false;
+    }
 }

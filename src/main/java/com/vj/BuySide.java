@@ -33,7 +33,7 @@ public class BuySide {
 
     public BuySide(SessionSettings settings, ClientService clientService) throws Exception {
         this.sessionSettings = settings;
-        Application application = new Application(settings);
+        Application application = new Application(settings, false);
         MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
         LogFactory logFactory = new ScreenLogFactory(true, true, true);
         MessageFactory messageFactory = new DefaultMessageFactory();
@@ -101,7 +101,7 @@ public class BuySide {
 
     public static void main(String[] args) throws Exception {
         try {
-            new LogConfig(BuySide.class);
+            //new LogConfig(BuySide.class);
             InputStream inputStream = getSettingsInputStream(args);
             SessionSettings settings = new SessionSettings(inputStream);
             inputStream.close();

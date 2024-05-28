@@ -23,4 +23,19 @@ public abstract class LongAttribute implements Attribute<Long>, Comparable<LongA
     public String toString() {
         return String.valueOf(value);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (int) value;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof LongAttribute) {
+            return value == ((LongAttribute) other).value;
+        }
+        return false;
+    }
 }

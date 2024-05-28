@@ -39,15 +39,41 @@ public class TestScenarioOne {
         System.in.read();
 
         try {
+            while (services.orders().find(orderId).orderAction() == OrderAction.WAIT) {
+                log.info("Waiting on Ack of Order.");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ie) {
+
+                }
+            }
             modifyOrderPrice(orderId, 102.34);
 
             System.out.println("press <enter> to modify order qty");
             System.in.read();
 
+            while (services.orders().find(orderId).orderAction() == OrderAction.WAIT) {
+                log.info("Waiting on Ack of Order.");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ie) {
+
+                }
+            }
+
             modifyOrderQty(orderId, 900.0);
 
             System.out.println("press <enter> to cancel order");
             System.in.read();
+
+            while (services.orders().find(orderId).orderAction() == OrderAction.WAIT) {
+                log.info("Waiting on Ack of Order.");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ie) {
+
+                }
+            }
 
             cancelOrder(orderId);
 

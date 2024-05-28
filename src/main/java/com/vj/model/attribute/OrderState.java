@@ -3,6 +3,7 @@ package com.vj.model.attribute;
 public enum OrderState implements Attribute<Integer> {
     OPEN_REQ,
     OPEN_SENT,
+    OPEN_ERR,
     OPEN_PEND, // PendingNew
     OPEN, // New
     REJECTED, // Rejected

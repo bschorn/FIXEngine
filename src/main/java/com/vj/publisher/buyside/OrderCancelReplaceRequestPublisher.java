@@ -41,20 +41,31 @@ public class OrderCancelReplaceRequestPublisher extends OrderPublisher<EquityOrd
     public void publish(EquityOrder equityOrder) {
         try {
             OrderCancelReplaceRequest orderCancelReplaceRequest = orderCancelReplaceRequestTransform.outbound(equityOrder);
+            EquityOrder replaceOrder = equityOrder.update()
+                    .orderState(OrderState.REPLACE_SENT)
+                    .orderAction(OrderAction.WAIT)
+                    .end();
             send(orderCancelReplaceRequest, new Callback() {
                 @Override
                 public void onSuccess() throws OrderService.NoOrderFoundException {
-                    services().orders().update(
-                            equityOrder.update()
-                                    .orderState(OrderState.REPLACE_SENT)
-                                    .orderAction(OrderAction.NONE)
-                                    .end());
+                    services().orders().update(replaceOrder);
                 }
 
                 @Override
                 public void onException(Exception exception) {
-                    //TODO handle exception
-                    log.error(exception.getMessage());
+                    if (exception instanceof OrderService.NoOrderFoundException) {
+                        log.error(exception.getMessage());
+                    } else {
+                        try {
+                            services().orders().update(equityOrder.update()
+                                    .orderState(OrderState.OPEN_ERR)
+                                    .orderAction(OrderAction.WAIT)
+                                    .error(exception.getMessage())
+                                    .end());
+                        } catch (OrderService.NoOrderFoundException nofe) {
+                            log.error(exception.getMessage());
+                        }
+                    }
                 }
             });
         } catch (NoTransformationException nte) {
