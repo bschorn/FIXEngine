@@ -3,10 +3,10 @@ package com.vj;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import javax.management.ObjectName;
 
+import com.vj.interactive.CommandLineProcessor;
 import com.vj.model.attribute.Account;
 import com.vj.service.ClientService;
 import com.vj.tests.TestScenarioOne;
@@ -113,7 +113,9 @@ public class BuySide {
             boolean testing = Boolean.valueOf(System.getProperty("test", "false"));
             if (testing) {
                 TestScenarioOne tester = new TestScenarioOne(Assembly.services(), buySide.sessionID());
-                tester.run();
+                //tester.run();
+                CommandLineProcessor commandLineProcessor = new CommandLineProcessor(tester);
+                commandLineProcessor.start();
             } else {
                 System.out.println("press <enter> to quit");
                 System.in.read();

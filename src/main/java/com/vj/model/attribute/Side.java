@@ -19,4 +19,13 @@ public enum Side implements Attribute<Integer> {
     public String toString() {
         return name();
     }
+
+    public static Side from(String value) {
+        for (Side side : Side.values()) {
+            if (side.name().equalsIgnoreCase(value)) {
+                return side;
+            }
+        }
+        throw new IllegalArgumentException("Unknown side value: " + value);
+    }
 }

@@ -21,8 +21,6 @@ import com.vj.transform.NoFieldTransform;
 import com.vj.transform.NoMessageTransform;
 import com.vj.transform.Transformers;
 import com.vj.validator.Validators;
-import com.vj.validator.order.equity.NewOrderSingleValidator;
-import com.vj.validator.order.equity.OrderCancelReplaceRequestValidator;
 import quickfix.field.*;
 import quickfix.fix42.*;
 
@@ -80,13 +78,13 @@ public class Assembly {
         transformers.register(OrderCancelReject.class, new com.vj.transform.succession.message.OrderCancelRejectTransform(services, transformers));
         transformers.register(ExecutionReport.class, new com.vj.transform.succession.message.ExecutionReportTransform(services, transformers));
         // validators - messages
-        validators.register(NewOrderSingle.class, new NewOrderSingleValidator());
-        validators.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestValidator());
+        //validators.register(NewOrderSingle.class, new NewOrderSingleValidator());
+        //validators.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestValidator());
     }
 
     public static void init() {
         if (sellside) {
-            INSTANCE.handlers.register(new NewOrderSingleHandler(INSTANCE.transformers.message(NewOrderSingle.class), INSTANCE.validators.get(NewOrderSingle.class)));
+            INSTANCE.handlers.register(new NewOrderSingleHandler(INSTANCE.transformers.message(NewOrderSingle.class)));
             INSTANCE.handlers.register(new OrderCancelReplaceRequestHandler(INSTANCE.transformers.message(OrderCancelReplaceRequest.class)));
             INSTANCE.handlers.register(new OrderCancelRequestHandler(INSTANCE.transformers.message(OrderCancelRequest.class)));
             INSTANCE.orderPublishers.register(new OrderAcceptedPublisher(INSTANCE.transformers.message(ExecutionReport.class)));

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.field.CxlRejReason;
 import quickfix.field.CxlRejResponseTo;
-import quickfix.field.ExecType;
 import quickfix.field.Text;
 import quickfix.fix42.ExecutionReport;
 import quickfix.fix42.OrderCancelReject;

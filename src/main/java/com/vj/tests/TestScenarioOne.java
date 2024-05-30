@@ -2,6 +2,7 @@ package com.vj.tests;
 
 import com.vj.model.attribute.*;
 import com.vj.model.entity.EquityOrder;
+import com.vj.model.entity.Order;
 import com.vj.service.ClientService;
 import com.vj.service.OrderService;
 import com.vj.service.Services;
@@ -30,7 +31,7 @@ public class TestScenarioOne {
 
     public void run() throws IOException {
         System.out.println("press <enter> to submit order");
-        System.in.read();
+        //System.in.read();
         // create new order
         OrderId orderId = services.orders().nextId();
         submitOrder(orderId, "MSFT", Side.B, 1000.0, 102.1);
@@ -113,7 +114,7 @@ public class TestScenarioOne {
         modifyOrder(orderId, qty, currentOrder.limitPrice());
     }
 
-    private void modifyOrder(OrderId orderId, double qty, double px) throws OrderService.NoOrderFoundException {
+    public void modifyOrder(OrderId orderId, double qty, double px) throws OrderService.NoOrderFoundException {
         // retrieve current version of order (after sent to broker)
         EquityOrder currentOrder = services.orders().find(orderId);
         System.out.println("Current Order");
@@ -147,7 +148,7 @@ public class TestScenarioOne {
         services.orders().modify(modifiedOrder);
     }
 
-    private void cancelOrder(OrderId orderId) throws OrderService.NoOrderFoundException {
+    public void cancelOrder(OrderId orderId) throws OrderService.NoOrderFoundException {
         // retrieve current version of order
         EquityOrder currentOrder = services.orders().find(orderId);
         // cancel current version
@@ -156,6 +157,18 @@ public class TestScenarioOne {
         System.out.println(canOrder.toString());
         // submit to services (which sends it to broker)
         services.orders().modify(canOrder);
+    }
 
+    public void orderStatus(OrderId orderId) throws OrderService.NoOrderFoundException {
+        EquityOrder currentOrder = services.orders().find(orderId);
+        System.out.println("Order Status");
+        System.out.println(currentOrder.toString());
+    }
+
+    public void orderHistory(OrderId orderId) throws OrderService.NoOrderFoundException {
+        System.out.println("Order History");
+        for (Order order : services.orders().getHistory(orderId)) {
+            System.out.println(order.toString());
+        }
     }
 }
