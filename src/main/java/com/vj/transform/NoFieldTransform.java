@@ -7,6 +7,11 @@ import quickfix.Field;
 
 public class NoFieldTransform implements FieldTransform<Field,StringAttribute> {
     @Override
+    public Class<Field> fieldClass() {
+        return null;
+    }
+
+    @Override
     public StringAttribute inbound(quickfix.Field value) {
         throw new UnsupportedOperationException();
     }

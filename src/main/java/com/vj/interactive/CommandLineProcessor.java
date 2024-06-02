@@ -2,28 +2,26 @@ package com.vj.interactive;
 
 import com.vj.model.attribute.OrderId;
 import com.vj.service.OrderService;
-import com.vj.tests.TestScenarioOne;
 
 import java.util.stream.Collectors;
 
 /**
  *
  */
-public class CommandLineProcessor extends Thread {
+public class CommandLineProcessor {
 
     private boolean keepLooping = true;
     private final CommandQueue commandQueue;
     private final CommandLineReader commandLineReader;
-    private final TestScenarioOne tester;
+    private final CommandLineSession commandLineSession;
 
-    public CommandLineProcessor(TestScenarioOne tester) {
-        this.tester = tester;
+    public CommandLineProcessor(CommandLineSession commandLineSession) {
+        this.commandLineSession = commandLineSession;
         this.commandQueue = new CommandQueue();
         this.commandLineReader = new CommandLineReader(this.commandQueue);
     }
 
-    @Override
-    public void run() {
+    public void loop() {
         this.commandLineReader.start();
         while (keepLooping) {
             Command nextCommand = commandQueue.get();
@@ -75,36 +73,37 @@ public class CommandLineProcessor extends Thread {
                 case HELP:
                     Command.HelpCommand helpCommand = nextCommand.get();
                     handle(helpCommand);
+                    break;
                 case QUIT:
-                    shutdown();
+                    quit();
                     break;
             }
         }
     }
 
-    public void shutdown() {
-        this.keepLooping = false;
+    public void quit() {
         this.commandQueue.shutdown();
         this.commandLineReader.shutdown();
+        this.keepLooping = false;
     }
 
     private void handle(Command.NewOrderCommand command) {
-        tester.submitOrder(new OrderId(command.id()), command.symbol, command.side, command.qty, command.price);
+        commandLineSession.submitOrder(new OrderId(command.orderId), command.symbol, command.side, command.qty, command.price);
     }
     private void handle(Command.ModifyOrderCommand command) throws OrderService.NoOrderFoundException {
-        tester.modifyOrder(new OrderId(command.id()), command.qty, command.price);
+        commandLineSession.modifyOrder(new OrderId(command.orderId), command.qty, command.price);
     }
     private void handle(Command.CancelOrderCommand command) throws OrderService.NoOrderFoundException {
-        tester.cancelOrder(new OrderId(command.id()));
+        commandLineSession.cancelOrder(new OrderId(command.orderId));
     }
     private void handle(Command.OrderStatusCommand command) throws OrderService.NoOrderFoundException {
-        tester.orderStatus(new OrderId(command.id()));
+        commandLineSession.orderStatus(new OrderId(command.orderId));
     }
     private void handle(Command.OrderHistoryCommand command) throws OrderService.NoOrderFoundException {
-        tester.orderHistory(new OrderId(command.id()));
+        commandLineSession.orderHistory(new OrderId(command.orderId));
     }
     private void handle(Command.HelpCommand command) {
-        String helpMessage =
+        String helpMessage = command.commandTypeToHelp.name().toLowerCase() + ": " +
                 command.commandTypeToHelp.getFields().stream()
                         .map(ct -> ct.name())
                         .collect(Collectors.joining(" "));

@@ -35,6 +35,11 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
         this.ordTypeTransform = transformers.field(OrdType.class);
     }
 
+    @Override
+    public Class<ExecutionReport> messageClass() {
+        return ExecutionReport.class;
+    }
+
     /**
      * BuySide
      */
@@ -68,8 +73,8 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
         message.set(new LastQty(0.0));
         message.set(new LastPx(0.0));
         message.set(new LeavesQty(equityOrder.unfilledQty()));
-        message.set(new CumQty(equityOrder.filledQty()));
-        message.set(new AvgPx(equityOrder.filledPrice()));
+        message.set(new CumQty(equityOrder.totFillQty()));
+        message.set(new AvgPx(equityOrder.avgFillPrice()));
         message.set(new TransactTime(LocalDateTime.now()));
         return message;
     }

@@ -7,9 +7,10 @@ import java.io.InputStream;
 import javax.management.ObjectName;
 
 import com.vj.interactive.CommandLineProcessor;
+import com.vj.manager.SessionManager;
 import com.vj.model.attribute.Account;
 import com.vj.service.ClientService;
-import com.vj.tests.TestScenarioOne;
+import com.vj.interactive.CommandLineSession;
 import org.quickfixj.jmx.JmxExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,10 @@ public class BuySide {
         this.sessionSettings = settings;
         Application application = new Application(settings, false);
         MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
-        LogFactory logFactory = new ScreenLogFactory(true, true, true);
+        LogFactory logFactory = new ScreenLogFactory(
+                settings.getBool("ScreenLogShowIncoming"),
+                settings.getBool("ScreenLogShowOutgoing"),
+                settings.getBool("ScreenLogEvents"));
         MessageFactory messageFactory = new DefaultMessageFactory();
         initiator = new SocketInitiator(application, messageStoreFactory, settings, logFactory,
                 messageFactory);
@@ -45,7 +49,6 @@ public class BuySide {
         log.info("Acceptor registered with JMX, name={}", connectorObjectName);
         this.clientService = clientService;
     }
-
 
     public void stop() {
         try {
@@ -78,6 +81,7 @@ public class BuySide {
                     }
                     Account sessionAccount = new Account(senderAccount);
                     clientService.register(sessionId.getSenderCompID(), sessionAccount);
+                    SessionManager.register(sessionId, sessionSettings.getSessionProperties(sessionId));
                 } catch (ConfigError configError) {
                     log.error(configError.getMessage());
                 }
@@ -110,17 +114,14 @@ public class BuySide {
             buySide.start();
             buySide.logon();
 
-            boolean testing = Boolean.valueOf(System.getProperty("test", "false"));
-            if (testing) {
-                TestScenarioOne tester = new TestScenarioOne(Assembly.services(), buySide.sessionID());
-                //tester.run();
-                CommandLineProcessor commandLineProcessor = new CommandLineProcessor(tester);
-                commandLineProcessor.start();
-            } else {
+            boolean headless = Boolean.valueOf(System.getProperty("headless", "false"));
+            if (headless) {
                 System.out.println("press <enter> to quit");
                 System.in.read();
+            } else {
+                CommandLineProcessor commandLineProcessor = new CommandLineProcessor(new CommandLineSession(Assembly.services(), buySide.sessionID()));
+                commandLineProcessor.loop();
             }
-
             buySide.stop();
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -25,6 +25,11 @@ public class OrdTypeTransform implements FieldTransform<OrdType,OrderType> {
     }
 
     @Override
+    public Class<OrdType> fieldClass() {
+        return OrdType.class;
+    }
+
+    @Override
     public OrderType inbound(quickfix.field.OrdType ordType) throws NoTransformationException {
         OrderType orderType = mapInbound.get(ordType.getValue());
         if (orderType == null) {

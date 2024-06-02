@@ -22,16 +22,16 @@ public class Transformers {
         attributeTransformMap = new HashMap<>();
     }
 
-    public void register(Class<? extends Message> classTo, MessageTransform transform) {
-        entityTransformMap.put(classTo, transform);
+    public void register(MessageTransform transform) {
+        entityTransformMap.put(transform.messageClass(), transform);
     }
-    public void register(Class<? extends Field> classTo, FieldTransform transform) {
-        attributeTransformMap.put(classTo, transform);
+    public void register(FieldTransform transform) {
+        attributeTransformMap.put(transform.fieldClass(), transform);
     }
     public <T> T message(Class<? extends Message> classTo) {
         return (T) entityTransformMap.getOrDefault(classTo, unimplementedMessageTransform);
     }
     public <T> T field(Class<? extends Field> classTo) {
-        return (T) attributeTransformMap.get(classTo);
+        return (T) attributeTransformMap.getOrDefault(classTo, unimplementedFieldTransform);
     }
 }

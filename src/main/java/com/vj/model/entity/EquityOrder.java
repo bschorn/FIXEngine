@@ -2,11 +2,14 @@ package com.vj.model.entity;
 
 import com.vj.model.attribute.*;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder.OrderUpdater> {
     private final Data data;
+
+    private static DateTimeFormatter TIME_FMT = DateTimeFormatter.ISO_LOCAL_TIME;
 
     private EquityOrder(Data data) {
         this.data = data;
@@ -15,9 +18,6 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
         }
         if (data.orderState == null) {
             throw new RuntimeException(OrderState.class.getSimpleName() + " may not be null.");
-        }
-        if (data.broker == null) {
-            throw new RuntimeException(Broker.class.getSimpleName() + " may not be null.");
         }
         if (data.origClientOrderId == null) {
             throw new RuntimeException("Orig" + ClientOrderId.class.getSimpleName() + " may not be null.");
@@ -88,17 +88,22 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
     }
 
     @Override
-    public Instant modifiedTS() {
+    public ExecStrategy execStrategy() {
+        return data.execStrategy;
+    }
+
+    @Override
+    public LocalTime modifiedTS() {
         return data.modifiedTS;
     }
 
     @Override
-    public Instant updatedTS() {
+    public LocalTime updatedTS() {
         return data.updatedTS;
     }
 
     @Override
-    public Instant createdTS() {
+    public LocalTime createdTS() {
         return data.createdTS;
     }
 
@@ -109,27 +114,37 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
 
     @Override
     public double orderQty() {
-        return data.filledQty;
+        return data.totFillQty;
     }
 
     @Override
     public double limitPrice() {
-        return data.filledPrice;
+        return data.avgFillPrice;
     }
 
     @Override
-    public double filledQty() {
+    public double latestFillQty() {
+        return data.latestFillQty;
+    }
+
+    @Override
+    public double latestFillPrice() {
+        return data.latestFillPrice;
+    }
+
+    @Override
+    public double totFillQty() {
         return 0;
     }
 
     @Override
-    public double filledPrice() {
+    public double avgFillPrice() {
         return 0;
     }
 
     @Override
     public double unfilledQty() {
-        return data.filledQty - data.filledQty;
+        return data.totFillQty - data.totFillQty;
     }
 
     @Override
@@ -170,36 +185,51 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
 
     @Override
     public String toString() {
-        return new StringBuilder("Id: ")
+        return new StringBuilder()
+                .append("OrderId[")
                 .append(data.orderId)
-                .append(" Ver")
+                .append("] ver[")
                 .append(data.version)
-                .append(" Clid:")
+                .append("] ts[")
+                //.append(TO_STRING_TS_FMT.format(data.createdTS))
+                //.append("/")
+                //.append(TO_STRING_TS_FMT.format(data.modifiedTS))
+                //.append("/")
+                .append(TIME_FMT.format(data.updatedTS != null ? data.updatedTS : data.modifiedTS != null ? data.modifiedTS : data.createdTS))
+                .append("] id[")
+                .append(data.orderId)
+                .append("v")
+                .append(data.version)
+                .append("] clOrdId[")
                 .append(data.clientOrderId)
-                .append(" Bkid:")
-                .append(data.brokerOrderId == null ? "unset" : data.brokerOrderId)
-                .append(" ")
+                .append("/")
+                .append(data.origClientOrderId)
+                .append("]")
+                .append(" acct[")
                 .append(data.account)
-                .append(" [")
+                .append("] state[")
                 .append(data.orderState.name())
-                .append(":")
+                .append("] action[")
                 .append(data.orderAction.name())
-                .append("] ")
-                .append(data.broker)
+                .append("] strat[")
+                .append(data.execStrategy)
+                .append("] ord[")
+                .append(data.instrument.toString())
                 .append(" ")
                 .append(data.side)
-                .append(" ")
-                .append(data.instrument.toString())
                 .append(" ")
                 .append(data.orderQty)
                 .append("@")
                 .append(data.limitPrice)
-                .append(" Filled[")
-                .append(data.filledQty)
+                .append("] trd[")
+                .append(data.latestFillQty)
                 .append("@")
-                .append(data.filledPrice)
-                .append("] TS:")
-                .append(data.modifiedTS)
+                .append(data.latestFillPrice)
+                .append("] tot[")
+                .append(data.totFillQty)
+                .append("@")
+                .append(data.avgFillPrice)
+                .append("]")
                 .toString();
     }
 
@@ -243,10 +273,11 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
         Client client;
         Instrument instrument;
         Broker broker;
+        ExecStrategy execStrategy;
         LocalDate tradeDate;
         OrderType orderType;
         Side side;
-        Instant createdTS;
+        LocalTime createdTS;
 
         // Mutability from Replace
         ClientOrderId clientOrderId;
@@ -255,15 +286,18 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
 
         // Systematic mutation
         OrderVersion version;
-        Instant modifiedTS;
-        Instant updatedTS;
+        LocalTime modifiedTS;
+        LocalTime updatedTS;
 
         // Modifyable
         double orderQty;
         double limitPrice;
         // Updatable
-        double filledQty = 0.0;
-        double filledPrice = 0.0;
+        double latestFillQty = 0.0;
+        double latestFillPrice = 0.0;
+        // Updatable
+        double totFillQty = 0.0;
+        double avgFillPrice = 0.0;
 
         // Where are we now
         OrderState orderState;
@@ -326,6 +360,11 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
             return this;
         }
 
+        public OrderCreator execStrategy(ExecStrategy execStrategy) {
+            data.execStrategy = execStrategy;
+            return this;
+        }
+
         public OrderCreator side(Side side) {
             data.side = side;
             return this;
@@ -352,7 +391,7 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
         }
 
         public EquityOrder end() {
-            data.createdTS = Instant.now();
+            data.createdTS = LocalTime.now();
             data.modifiedTS = data.createdTS;
             return new EquityOrder(data);
         }
@@ -417,7 +456,7 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
         }
 
         public EquityOrder end() {
-            data.modifiedTS = Instant.now();
+            data.modifiedTS = LocalTime.now();
             return new EquityOrder(data);
         }
     }
@@ -448,12 +487,12 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
         }
 
         public OrderUpdater totalFillQty(double value) {
-            data.filledQty = value;
+            data.totFillQty = value;
             return this;
         }
 
         public OrderUpdater avgFillPrice(double value) {
-            data.filledPrice = value;
+            data.avgFillPrice = value;
             return this;
         }
 
@@ -463,7 +502,7 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
         }
 
         public EquityOrder end() {
-            data.updatedTS = Instant.now();
+            data.updatedTS = LocalTime.now();
             return new EquityOrder(data);
         }
     }

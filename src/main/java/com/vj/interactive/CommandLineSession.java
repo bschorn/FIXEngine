@@ -1,4 +1,4 @@
-package com.vj.tests;
+package com.vj.interactive;
 
 import com.vj.model.attribute.*;
 import com.vj.model.entity.EquityOrder;
@@ -10,16 +10,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.SessionID;
 
-import java.io.IOException;
+/**
+ *
+ */
+public class CommandLineSession {
 
-public class TestScenarioOne {
-
-    private static final Logger log = LoggerFactory.getLogger(TestScenarioOne.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandLineSession.class);
     Services services;
     SessionID sessionID;
     Account testAccount;
 
-    public TestScenarioOne(Services services, SessionID sessionID) {
+    public CommandLineSession(Services services, SessionID sessionID) {
         this.services = services;
         this.sessionID = sessionID;
         try {
@@ -29,6 +30,7 @@ public class TestScenarioOne {
         }
     }
 
+    /*
     public void run() throws IOException {
         System.out.println("press <enter> to submit order");
         //System.in.read();
@@ -85,12 +87,14 @@ public class TestScenarioOne {
             log.error(nofe.getMessage(), nofe);
         }
     }
+    */
 
     public void submitOrder(OrderId orderId, String symbol, Side side, double qty, double px) {
         EquityOrder newOrder = EquityOrder.create(orderId, new Client(sessionID.getTargetCompID()))
                 .account(testAccount)
                 .instrument(services.products().find(InstrumentSource.RIC, symbol))
-                .broker(Broker.JPMC)
+                .broker(Broker.DEFAULT)
+                .execStrategy(ExecStrategy.DEFAULT)
                 .orderType(OrderType.LIMIT)
                 .side(side)
                 .orderQty(qty)
@@ -98,8 +102,10 @@ public class TestScenarioOne {
                 .end();
         System.out.println("Submitting Order");
         System.out.println(newOrder.toString());
+        log.info("[CLO] Submitting: " + newOrder);
         // submit to services (which sends it to broker)
         services.orders().submit(newOrder);
+        log.info("[CLO] Submitted: " + newOrder);
     }
 
     private void modifyOrderPrice(OrderId orderId, double px) throws OrderService.NoOrderFoundException {
@@ -144,8 +150,11 @@ public class TestScenarioOne {
 
         System.out.println("Modifying Order");
         System.out.println(modifiedOrder.toString());
+        log.info("[CLO] Replacing: " + currentOrder);
+
         // submit to services the modified order (which sends it to broker)
         services.orders().modify(modifiedOrder);
+        log.info("[CLO] Replaced: " + modifiedOrder);
     }
 
     public void cancelOrder(OrderId orderId) throws OrderService.NoOrderFoundException {
@@ -155,20 +164,24 @@ public class TestScenarioOne {
         EquityOrder canOrder = currentOrder.modify().orderAction(OrderAction.CANCEL).end();
         System.out.println("Cancelling Order");
         System.out.println(canOrder.toString());
+        log.info("[CLO] Canceling: " + currentOrder);
         // submit to services (which sends it to broker)
         services.orders().modify(canOrder);
+        log.info("[CLO] Canceled: " + canOrder);
     }
 
     public void orderStatus(OrderId orderId) throws OrderService.NoOrderFoundException {
         EquityOrder currentOrder = services.orders().find(orderId);
         System.out.println("Order Status");
         System.out.println(currentOrder.toString());
+        log.info("[CLO] Status: " + currentOrder);
     }
 
     public void orderHistory(OrderId orderId) throws OrderService.NoOrderFoundException {
         System.out.println("Order History");
         for (Order order : services.orders().getHistory(orderId)) {
             System.out.println(order.toString());
+            log.info("[CLO] History: " + order);
         }
     }
 }

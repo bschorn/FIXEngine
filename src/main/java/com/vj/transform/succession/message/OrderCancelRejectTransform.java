@@ -32,6 +32,11 @@ public class OrderCancelRejectTransform implements MessageTransform<OrderCancelR
         this.ordStatusTransform = transformers.field(OrdStatus.class);
     }
 
+    @Override
+    public Class<OrderCancelReject> messageClass() {
+        return OrderCancelReject.class;
+    }
+
     /**
      * Sell-Side
      */

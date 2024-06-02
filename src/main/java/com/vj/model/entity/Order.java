@@ -5,6 +5,7 @@ import com.vj.model.attribute.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 
 public interface Order<M,U> {
@@ -18,16 +19,19 @@ public interface Order<M,U> {
     LocalDate tradeDate();
     Instrument instrument();
     Broker broker();
+    ExecStrategy execStrategy();
     OrderType orderType();
     Side side();
-    Instant createdTS();
+    LocalTime createdTS();
     OrderVersion version();
-    Instant modifiedTS();
-    Instant updatedTS();
+    LocalTime modifiedTS();
+    LocalTime updatedTS();
     double orderQty();
     double limitPrice();
-    double filledQty();
-    double filledPrice();
+    double latestFillQty();
+    double latestFillPrice();
+    double totFillQty();
+    double avgFillPrice();
     double unfilledQty();
     OrderAction orderAction();
     OrderState orderState();

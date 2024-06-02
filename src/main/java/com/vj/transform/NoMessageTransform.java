@@ -7,6 +7,11 @@ import quickfix.SessionID;
 
 public class NoMessageTransform implements MessageTransform<Message,EquityOrder> {
     @Override
+    public Class<Message> messageClass() {
+        return null;
+    }
+
+    @Override
     public EquityOrder inbound(Message message, SessionID sessionID, Object...objects) {
         throw new UnsupportedOperationException();
     }

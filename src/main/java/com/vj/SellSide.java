@@ -49,7 +49,10 @@ public class SellSide {
     public SellSide(SessionSettings settings) throws ConfigError, FieldConvertError, JMException {
         Application application = new Application(settings, true);
         MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
-        LogFactory logFactory = new ScreenLogFactory(true, true, true);
+        LogFactory logFactory = new ScreenLogFactory(
+                settings.getBool("ScreenLogShowIncoming"),
+                settings.getBool("ScreenLogShowOutgoing"),
+                settings.getBool("ScreenLogEvents"));
         MessageFactory messageFactory = new DefaultMessageFactory();
 
         acceptor = new SocketAcceptor(application, messageStoreFactory, settings, logFactory,

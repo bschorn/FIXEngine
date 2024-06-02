@@ -38,9 +38,9 @@ public class OrderCancelReplaceRequestHandler implements MessageHandler<OrderCan
             double newPrice = message.getPrice().getValue();
             EquityOrder equityOrder = orderCancelReplaceRequestTransform.inbound(message, sessionID);
             // check that newOrderQty isn't less than currently filled
-            if (newOrderQty < equityOrder.filledQty()) {
+            if (newOrderQty < equityOrder.totFillQty()) {
                 // set newOrderQty to equal filledQty and close order
-                newOrderQty = equityOrder.filledQty();
+                newOrderQty = equityOrder.totFillQty();
                 newPrice = equityOrder.limitPrice();
             }
             EquityOrder replacementOrder = EquityOrder.replicate(services().orders().nextId(), equityOrder.client(), new ClientOrderId(message.getClOrdID().getValue()))

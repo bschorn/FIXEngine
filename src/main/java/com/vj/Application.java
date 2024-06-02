@@ -85,7 +85,6 @@ public class Application implements quickfix.Application {
         }
     }
 
-    /* - save for use as an example
     private void sendMessage(SessionID sessionID, Message message) {
         try {
             Session session = Session.lookupSession(sessionID);
@@ -113,6 +112,5 @@ public class Application implements quickfix.Application {
     private ApplVerID getApplVerID(Session session) {
         return MessageUtils.toApplVerID(session.getSessionID().getBeginString());
     }
-    */
 
 }

@@ -37,6 +37,11 @@ public class OrdStatusTransform implements FieldTransform<OrdStatus,OrderState> 
       }
 
       @Override
+      public Class<OrdStatus> fieldClass() {
+            return OrdStatus.class;
+      }
+
+      @Override
       public OrderState inbound(OrdStatus ordStatus) throws NoTransformationException {
             OrderState orderState = mapInbound.get(ordStatus.getValue());
             if (orderState == null) {

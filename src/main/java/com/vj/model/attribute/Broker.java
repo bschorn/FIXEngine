@@ -8,7 +8,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum Broker implements Attribute<String> {
-    JPMC(Market.US_EQUITY, "JPM");
+    DEFAULT(Market.US_EQUITY, "DEFAULT"),
+    VCTV(Market.US_EQUITY, "VCTV");
 
     Market market;
     String value;

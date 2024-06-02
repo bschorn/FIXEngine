@@ -28,6 +28,11 @@ public class OrderCancelReplaceRequestTransform implements MessageTransform<Orde
         this.securityIDSourceTransform = transformers.field(SecurityIDSource.class);
     }
 
+    @Override
+    public Class<OrderCancelReplaceRequest> messageClass() {
+        return OrderCancelReplaceRequest.class;
+    }
+
     /**
      * Sell-Side
      */

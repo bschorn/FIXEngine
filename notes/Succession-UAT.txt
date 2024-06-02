@@ -1,0 +1,21 @@
+1=SenderAccount (VALZ-BIV1-1010010-M)
+49=SenderCompID (BIVO01)
+56=TargetCompID (SSYSUAT)
+57=TargetSubID (VTRD)
+115=OnBehalfOfCompID (VALZ)
+116=OnBehalfOfSubID (VALZ-BIV1-1010010-M)
+100=ExDestination (VCTV)
+9400=RoutStrategy (VLCT)
+
+
+BeginString=FIX.4.2
+SocketConnectPort=14501
+HeartBtInt=30
+SenderAccount=VALZ-BIV1-1010010-M
+SenderCompID=BIVO01
+TargetCompID=SSYSUAT
+TargetSubID=VTRD
+OnBehalfOfCompID=VALZ
+OnBehalfOfSubID=VALZ-BIV1-1010010-M
+ExDestination=VCTV
+RoutStrategy=VLCT

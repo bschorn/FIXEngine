@@ -1,15 +1,13 @@
 package com.vj.transform.succession.message;
 
+import com.vj.manager.SessionManager;
 import com.vj.model.attribute.*;
 import com.vj.model.entity.EquityOrder;
 import com.vj.service.ClientService;
 import com.vj.service.Services;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.Transformers;
-import com.vj.transform.succession.field.ExDestinationTransform;
-import com.vj.transform.succession.field.OrdTypeTransform;
-import com.vj.transform.succession.field.SecurityIDSourceTransform;
-import com.vj.transform.succession.field.SideTransform;
+import com.vj.transform.succession.field.*;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
 import quickfix.field.*;
@@ -24,6 +22,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
     private final SideTransform sideTransform;
     private final SecurityIDSourceTransform securityIDSourceTransform;
     private final ExDestinationTransform exDestinationTransform;
+    private final RoutStrategyTransform routStrategyTransform;
 
     public NewOrderSingleTransform(Services services, Transformers transformers) {
         this.services = services;
@@ -31,6 +30,12 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
         this.sideTransform = transformers.field(Side.class);
         this.securityIDSourceTransform = transformers.field(SecurityIDSource.class);
         this.exDestinationTransform = transformers.field(ExDestination.class);
+        this.routStrategyTransform = transformers.field(RoutStrategy.class);
+    }
+
+    @Override
+    public Class<NewOrderSingle> messageClass() {
+        return NewOrderSingle.class;
     }
 
     /**
@@ -58,6 +63,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
      */
     @Override
     public NewOrderSingle outbound(EquityOrder equityOrder) throws NoTransformationException {
+
         NewOrderSingle message = new NewOrderSingle();
         // required
         message.set(new Account(equityOrder.account().asValue()));
@@ -67,7 +73,8 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
         message.set(new OrderQty(equityOrder.orderQty()));
         message.set(new Price(equityOrder.limitPrice()));
         message.set(ordTypeTransform.outbound(equityOrder.orderType()));
-        message.set(exDestinationTransform.outbound(equityOrder.broker())); // this probably shouldn't come from the order
+        message.set(exDestinationTransform.outbound(equityOrder.broker()));
+        message.set(routStrategyTransform.outbound(equityOrder.execStrategy()));
         // optional
         message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
         message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));

@@ -24,6 +24,11 @@ public class SideTransform implements FieldTransform<quickfix.field.Side,Side> {
     }
 
     @Override
+    public Class<quickfix.field.Side> fieldClass() {
+        return quickfix.field.Side.class;
+    }
+
+    @Override
     public Side inbound(quickfix.field.Side qfSide) throws NoTransformationException {
         Side side = mapInbound.get(qfSide.getValue());
         if (qfSide == null) {

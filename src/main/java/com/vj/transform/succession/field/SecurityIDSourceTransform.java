@@ -5,6 +5,11 @@ import quickfix.field.SecurityIDSource;
 
 public class SecurityIDSourceTransform implements FieldTransform<SecurityIDSource,InstrumentSource> {
     @Override
+    public Class<SecurityIDSource> fieldClass() {
+        return SecurityIDSource.class;
+    }
+
+    @Override
     public InstrumentSource inbound(SecurityIDSource securityIDSource) {
         if (securityIDSource.getValue().equals("2")) {
             return InstrumentSource.SEDOL;
