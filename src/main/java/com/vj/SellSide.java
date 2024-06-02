@@ -47,7 +47,7 @@ public class SellSide {
     private final ObjectName connectorObjectName;
 
     public SellSide(SessionSettings settings) throws ConfigError, FieldConvertError, JMException {
-        Application application = new Application(settings, true);
+        Application application = new Application(settings, true, null);
         MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
         LogFactory logFactory = new ScreenLogFactory(
                 settings.getBool("ScreenLogShowIncoming"),

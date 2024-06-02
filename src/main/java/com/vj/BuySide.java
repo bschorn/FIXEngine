@@ -7,6 +7,7 @@ import java.io.InputStream;
 import javax.management.ObjectName;
 
 import com.vj.interactive.CommandLineProcessor;
+import com.vj.interactive.IOListener;
 import com.vj.manager.SessionManager;
 import com.vj.model.attribute.Account;
 import com.vj.service.ClientService;
@@ -31,10 +32,9 @@ public class BuySide {
     private final SessionSettings sessionSettings;
     private final ClientService clientService;
 
-
-    public BuySide(SessionSettings settings, ClientService clientService) throws Exception {
+    public BuySide(SessionSettings settings, ClientService clientService, quickfix.Application listener) throws Exception {
         this.sessionSettings = settings;
-        Application application = new Application(settings, false);
+        Application application = new Application(settings, false, listener);
         MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
         LogFactory logFactory = new ScreenLogFactory(
                 settings.getBool("ScreenLogShowIncoming"),
@@ -105,22 +105,23 @@ public class BuySide {
 
     public static void main(String[] args) throws Exception {
         try {
-            //new LogConfig(BuySide.class);
             InputStream inputStream = getSettingsInputStream(args);
             SessionSettings settings = new SessionSettings(inputStream);
             inputStream.close();
-
-            BuySide buySide = new BuySide(settings, Assembly.services().clients());
-            buySide.start();
-            buySide.logon();
-
+            BuySide buySide = null;
             boolean headless = Boolean.valueOf(System.getProperty("headless", "false"));
-            if (headless) {
-                System.out.println("press <enter> to quit");
-                System.in.read();
-            } else {
+            if (!headless) {
+                buySide = new BuySide(settings, Assembly.services().clients(), new IOListener());
+                buySide.start();
+                buySide.logon();
                 CommandLineProcessor commandLineProcessor = new CommandLineProcessor(new CommandLineSession(Assembly.services(), buySide.sessionID()));
                 commandLineProcessor.loop();
+            } else {
+                buySide = new BuySide(settings, Assembly.services().clients(), null);
+                buySide.start();
+                buySide.logon();
+                System.out.println("press <enter> to quit");
+                System.in.read();
             }
             buySide.stop();
         } catch (Exception e) {

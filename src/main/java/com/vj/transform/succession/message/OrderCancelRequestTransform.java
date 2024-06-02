@@ -39,7 +39,7 @@ public class OrderCancelRequestTransform implements MessageTransform<OrderCancel
      */
     @Override
     public EquityOrder inbound(OrderCancelRequest message, SessionID sessionID, Object...objects) throws FieldNotFound, OrderService.NoOrderFoundException {
-        return services.orders().find(new ClientOrderId(message.getClOrdID().getValue()));
+        return services.orders().find(new ClientOrderId(message.getOrigClOrdID().getValue()));
     }
 
     /**
