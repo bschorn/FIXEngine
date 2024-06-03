@@ -137,12 +137,12 @@ public class SellSide {
             SellSide sellSide = new SellSide(settings);
             sellSide.start();
 
-            SellSideOrderFiller filler = new SellSideOrderFiller(Assembly.services().orders());
-            filler.start();
+            //SellSideOrderFiller filler = new SellSideOrderFiller(Assembly.services().orders());
+            //filler.start();
 
             System.out.println("press <enter> to quit");
             System.in.read();
-            filler.shutdown();
+            //filler.shutdown();
             sellSide.stop();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
