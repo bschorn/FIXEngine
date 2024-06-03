@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f43777a-64e8-419a-8126-09f2223d0cec" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/SellSide.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/SellSide.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/BuySide.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/BuySide.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/publisher/OrderPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/publisher/OrderPublisher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/FIX42.Succession.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/FIX42.Succession.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +105,7 @@
       <recent name="com.vj.transform.succession.message" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SSYSUAT">
+  <component name="RunManager" selected="Application.BuySide">
     <configuration name="BuySide" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="11" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -152,7 +155,7 @@
       <workItem from="1716560555977" duration="5989000" />
       <workItem from="1716571112379" duration="76483000" />
       <workItem from="1717126467030" duration="436000" />
-      <workItem from="1717164608578" duration="37083000" />
+      <workItem from="1717164608578" duration="39480000" />
     </task>
     <servers />
   </component>

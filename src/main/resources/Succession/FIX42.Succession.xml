@@ -6,15 +6,18 @@
         <field name="MsgType" required="Y"/>
         <field name="SenderCompID" required="Y"/>
         <field name="TargetCompID" required="Y"/>
+        <field name="TargetSubID" required="N"/>
         <field name="OnBehalfOfCompID" required="N"/>
+        <field name="OnBehalfOfSubID" required="N"/>
         <field name="DeliverToCompID" required="N"/>
         <field name="MsgSeqNum" required="Y"/>
         <field name="SendingTime" required="Y"/>
         <field name="OrigSendingTime" required="N"/>
         <field name="PossDupFlag" required="N"/>
-        <field name="PossDupFlag" required="N"/>
         <field name="PossResend" required="N"/>
         <field name="LastMsgSeqNumProcessed" required="N"/>
+        <!-- required by quickfixj -->
+        <field name="OnBehalfOfSendingTime" required="N"/>
     </header>
     <trailer>
         <field name="CheckSum" required="Y"/>
@@ -78,6 +81,7 @@
             <field name="OrderTTL" required="N"/>
             <field name="WashTradePrevention" required="N"/>
             <field name="PostOnly" required="N"/>
+            <field name="RoutStrategy" required="N"/>
         </message>
         <message name="ExecutionReport" msgtype="8" msgcat="app">
             <field name="Account" required="Y"/>
@@ -113,7 +117,7 @@
             <field name="LiquidityFlag" required="N"/>
         </message>
         <message name="OrderCancelReplaceRequest" msgtype="G" msgcat="app">
-            <field name="Account" required="Y"/>
+            <field name="Account" required="N"/>
             <field name="ClearingAccount" required="N"/>
             <field name="ClOrdID" required="Y"/>
             <field name="OrigClOrdID" required="Y"/>
@@ -585,7 +589,7 @@
             <value enum="6" description="PEM_DES_MD5"/>
         </field>
         <field number="99" name="StopPx" type="PRICE"/>
-        <field number="100" name="ExDestination" type="EXCHANGE"/>
+        <field number="100" name="ExDestination" type="STRING"/>
         <field number="102" name="CxlRejReason" type="INT">
             <value enum="0" description="TOO_LATE_TO_CANCEL"/>
             <value enum="1" description="UNKNOWN_ORDER"/>
@@ -676,7 +680,7 @@
         <field number="137" name="MiscFeeAmt" type="AMT"/>
         <field number="138" name="MiscFeeCurr" type="CURRENCY"/>
         <!-- Changed to string in FIX5.0, overrides this field type -->
-        <field number="139" name="MiscFeeType" type="CHAR">
+        <field number="139" name="MiscFeeType" type="STRING">
             <value enum="1" description="REGULATORY"/>
             <value enum="2" description="TAX"/>
             <value enum="3" description="LOCAL_COMMISSION"/>
@@ -1402,6 +1406,7 @@
             <value enum="9" description="NOT_AUTHORIZED_TO_QUOTE_SECURITY"/>
         </field>
         <field number="369" name="LastMsgSeqNumProcessed" type="SEQNUM"/>
+        <field number="370" name="OnBehalfOfSendingTime" type="UTCTIMESTAMP"/>
         <field number="371" name="RefTagID" type="INT"/>
         <field number="372" name="RefMsgType" type="STRING"/>
         <field number="373" name="SessionRejectReason" type="INT">
@@ -1955,7 +1960,7 @@
             <value enum="7" description="CANCEL_ALL_ORDERS"/>
         </field>
         <!-- This changed to an int in FIX5.0 -->
-        <field number="532" name="MassCancelRejectReason" type="CHAR">
+        <field number="532" name="MassCancelRejectReason" type="INT">
             <value enum="0" description="MASS_CANCEL_NOT_SUPPORTED"/>
             <value enum="1" description="INVALID_OR_UNKNOWN_SECURITY"/>
             <value enum="2" description="INVALID_OR_UNKNOWN_UNDERLYING"/>
@@ -2996,8 +3001,10 @@
         </field>
         <field number="5700" name="LocateBroker" type="STRING"/>
         <field number="5789" name="ClientInfo" type="STRING"/>
+        <field number="5980" name="AltExDestination" type="CHAR"/>
         <field number="6232" name="OrderTTL" type="STRING"/>
         <field number="6396" name="RejectCode" type="STRING"/>
+        <field number="6867" name="CancelOnDisconnect" type="CHAR"/>
         <field number="7928" name="WashTradePrevention" type="STRING">
             <value enum="N" description="Cancel Newest"/>
             <value enum="O" description="Cancel Oldest"/>
@@ -3007,7 +3014,13 @@
             <value enum="Y" description="POST_ONLY"/>
             <value enum="N" description="DEFAULT"/>
         </field>
-        <field number="6867" name="CancelOnDisconnect" type="CHAR"/>
+        <field number="8020" name="DisplayRange" type="INT"/>
+        <field number="9303" name="RoutingInst" type="CHAR"/>
+        <field number="9350" name="RouteDeliveryMethod" type="STRING"/>
+        <field number="9400" name="RoutStrategy" type="STRING"/>
+        <field number="9416" name="ExtendedExecInst" type="STRING"/>
+        <field number="9479" name="DisplayIndicator" type="STRING"/>
+        <field number="9618" name="MaxRemovePct" type="INT"/>
         <field number="9619" name="CancelOrigOnReject" type="CHAR">
             <value enum="N" description="Leave original alone"/>
             <value enum="Y" description="Cancel original order if replacement fails"/>

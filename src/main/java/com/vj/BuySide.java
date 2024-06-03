@@ -10,6 +10,7 @@ import com.vj.interactive.CommandLineProcessor;
 import com.vj.interactive.IOListener;
 import com.vj.manager.SessionManager;
 import com.vj.model.attribute.Account;
+import com.vj.publisher.OrderPublisher;
 import com.vj.service.ClientService;
 import com.vj.interactive.CommandLineSession;
 import org.quickfixj.jmx.JmxExporter;
@@ -17,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import quickfix.*;
+import quickfix.field.OnBehalfOfCompID;
+import quickfix.field.OnBehalfOfSubID;
 
 
 /**
@@ -40,6 +43,7 @@ public class BuySide {
                 settings.getBool("ScreenLogShowIncoming"),
                 settings.getBool("ScreenLogShowOutgoing"),
                 settings.getBool("ScreenLogEvents"));
+
         MessageFactory messageFactory = new DefaultMessageFactory();
         initiator = new SocketInitiator(application, messageStoreFactory, settings, logFactory,
                 messageFactory);
@@ -76,6 +80,14 @@ public class BuySide {
                 Session.lookupSession(sessionId).logon();
                 try {
                     String senderAccount = sessionSettings.getString(sessionId, "SenderAccount");
+                    String onBehalfOfCompID = sessionSettings.getString(sessionId, "OnBehalfOfCompID");
+                    if (onBehalfOfCompID != null) {
+                        OrderPublisher.onBehalfOfCompID = new OnBehalfOfCompID(onBehalfOfCompID);
+                    }
+                    String onBehalfOfSubID = sessionSettings.getString(sessionId, "OnBehalfOfSubID");
+                    if (onBehalfOfSubID != null) {
+                        OrderPublisher.onBehalfOfSubID = new OnBehalfOfSubID(onBehalfOfSubID);
+                    }
                     if (senderAccount == null) {
                         log.error(this.getClass().getSimpleName() + ".logon() - SenderAccount was not set for session: " + sessionId.getSenderCompID());
                     }
