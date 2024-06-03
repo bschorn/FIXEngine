@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * Sell-side implementation
@@ -66,6 +67,13 @@ public class SellSideOrderServiceImpl implements OrderService {
     @Override
     public <T extends Order> List<T> getHistory(OrderId orderId) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<Order> getOpenOrders() {
+        return clientOrderMap.values().stream()
+                .filter(o -> o.isOpen())
+                .collect(Collectors.toList());
     }
 
     @Override

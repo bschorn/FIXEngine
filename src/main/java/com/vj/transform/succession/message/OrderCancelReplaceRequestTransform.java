@@ -7,7 +7,6 @@ import com.vj.service.Services;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.Transformers;
 import com.vj.transform.succession.field.OrdTypeTransform;
-import com.vj.transform.succession.field.SecurityIDSourceTransform;
 import com.vj.transform.succession.field.SideTransform;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
@@ -19,13 +18,11 @@ public class OrderCancelReplaceRequestTransform implements MessageTransform<Orde
     private final Services services;
     private final OrdTypeTransform ordTypeTransform;
     private final SideTransform sideTransform;
-    private final SecurityIDSourceTransform securityIDSourceTransform;
 
     public OrderCancelReplaceRequestTransform(Services services, Transformers transformers) {
         this.services = services;
         this.ordTypeTransform = transformers.field(OrdType.class);
         this.sideTransform = transformers.field(Side.class);
-        this.securityIDSourceTransform = transformers.field(SecurityIDSource.class);
     }
 
     @Override

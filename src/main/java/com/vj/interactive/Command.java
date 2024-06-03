@@ -1,5 +1,6 @@
 package com.vj.interactive;
 
+import com.vj.Assembly;
 import com.vj.model.attribute.Side;
 
 import java.time.Duration;
@@ -86,8 +87,6 @@ public interface Command {
     QuitCommand QuitCommand = new QuitCommand();
 
     class NewOrderCommand implements Command {
-        private static final AtomicLong nextId = new AtomicLong(0);
-        public final long orderId = nextId.getAndIncrement();
         public final String symbol;
         public final Side side;
         public final double qty;

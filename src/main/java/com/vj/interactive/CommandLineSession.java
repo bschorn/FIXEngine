@@ -16,7 +16,7 @@ import quickfix.SessionID;
 public class CommandLineSession {
 
     private static final Logger log = LoggerFactory.getLogger(CommandLineSession.class);
-    Services services;
+    private final Services services;
     SessionID sessionID;
     Account testAccount;
 
@@ -30,69 +30,11 @@ public class CommandLineSession {
         }
     }
 
-    /*
-    public void run() throws IOException {
-        System.out.println("press <enter> to submit order");
-        //System.in.read();
-        // create new order
+    public void submitOrder(String symbol, Side side, double qty, double px) {
         OrderId orderId = services.orders().nextId();
-        submitOrder(orderId, "MSFT", Side.B, 1000.0, 102.1);
-
-        System.out.println("press <enter> to modify order price");
-        System.in.read();
-
-        try {
-            while (services.orders().find(orderId).orderAction() == OrderAction.WAIT) {
-                log.info("Waiting on Ack of Order.");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ie) {
-
-                }
-            }
-            modifyOrderPrice(orderId, 102.34);
-
-            System.out.println("press <enter> to modify order qty");
-            System.in.read();
-
-            while (services.orders().find(orderId).orderAction() == OrderAction.WAIT) {
-                log.info("Waiting on Ack of Order.");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ie) {
-
-                }
-            }
-
-            modifyOrderQty(orderId, 900.0);
-
-            System.out.println("press <enter> to cancel order");
-            System.in.read();
-
-            while (services.orders().find(orderId).orderAction() == OrderAction.WAIT) {
-                log.info("Waiting on Ack of Order.");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ie) {
-
-                }
-            }
-
-            cancelOrder(orderId);
-
-            System.out.println("press <enter> to finish testing");
-            System.in.read();
-
-        } catch (OrderService.NoOrderFoundException nofe) {
-            log.error(nofe.getMessage(), nofe);
-        }
-    }
-    */
-
-    public void submitOrder(OrderId orderId, String symbol, Side side, double qty, double px) {
         EquityOrder newOrder = EquityOrder.create(orderId, new Client(sessionID.getTargetCompID()))
                 .account(testAccount)
-                .instrument(services.products().find(InstrumentSource.RIC, symbol))
+                .instrument(services.products().find(InstrumentSource.NASDAQ, symbol))
                 .broker(Broker.DEFAULT)
                 .execStrategy(ExecStrategy.DEFAULT)
                 .orderType(OrderType.LIMIT)
@@ -100,8 +42,8 @@ public class CommandLineSession {
                 .orderQty(qty)
                 .limitPrice(px)
                 .end();
-        System.out.println("Submitting Order");
-        System.out.println(newOrder.toString());
+        System.out.println("Submitting Order [" + newOrder.id() + "]");
+        System.out.println(newOrder);
         log.info("[CLO] Submitting: " + newOrder);
         // submit to services (which sends it to broker)
         services.orders().submit(newOrder);
@@ -123,7 +65,7 @@ public class CommandLineSession {
     public void modifyOrder(OrderId orderId, double qty, double px) throws OrderService.NoOrderFoundException {
         // retrieve current version of order (after sent to broker)
         EquityOrder currentOrder = services.orders().find(orderId);
-        System.out.println("Current Order");
+        System.out.println("Current Order [" + currentOrder.id() + "]");
         System.out.println(currentOrder.toString());
 
         EquityOrder modifiedOrder = null;
@@ -148,7 +90,7 @@ public class CommandLineSession {
             return;
         }
 
-        System.out.println("Modifying Order");
+        System.out.println("Modifying Order [" + modifiedOrder.id() + "]");
         System.out.println(modifiedOrder.toString());
         log.info("[CLO] Replacing: " + currentOrder);
 
@@ -162,7 +104,7 @@ public class CommandLineSession {
         EquityOrder currentOrder = services.orders().find(orderId);
         // cancel current version
         EquityOrder canOrder = currentOrder.modify().orderAction(OrderAction.CANCEL).end();
-        System.out.println("Cancelling Order");
+        System.out.println("Cancelling Order [" + canOrder.id() + "]");
         System.out.println(canOrder.toString());
         log.info("[CLO] Canceling: " + currentOrder);
         // submit to services (which sends it to broker)
@@ -172,13 +114,13 @@ public class CommandLineSession {
 
     public void orderStatus(OrderId orderId) throws OrderService.NoOrderFoundException {
         EquityOrder currentOrder = services.orders().find(orderId);
-        System.out.println("Order Status");
+        System.out.println("Order Status [" + currentOrder.id() + "]");
         System.out.println(currentOrder.toString());
         log.info("[CLO] Status: " + currentOrder);
     }
 
     public void orderHistory(OrderId orderId) throws OrderService.NoOrderFoundException {
-        System.out.println("Order History");
+        System.out.println("Order History [" + orderId.asValue() + "]");
         for (Order order : services.orders().getHistory(orderId)) {
             System.out.println(order.toString());
             log.info("[CLO] History: " + order);

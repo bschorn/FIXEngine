@@ -88,7 +88,7 @@ public class CommandLineProcessor {
     }
 
     private void handle(Command.NewOrderCommand command) {
-        commandLineSession.submitOrder(new OrderId(command.orderId), command.symbol, command.side, command.qty, command.price);
+        commandLineSession.submitOrder(command.symbol, command.side, command.qty, command.price);
     }
     private void handle(Command.ModifyOrderCommand command) throws OrderService.NoOrderFoundException {
         commandLineSession.modifyOrder(new OrderId(command.orderId), command.qty, command.price);

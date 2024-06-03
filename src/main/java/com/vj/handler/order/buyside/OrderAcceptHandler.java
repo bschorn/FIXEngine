@@ -50,7 +50,7 @@ public class OrderAcceptHandler extends ExecutionReportHandler {
                     equityOrder.update()
                             .orderState(newOrderState)
                             .orderAction(OrderAction.NONE)
-                            .brokerOrderId(new BrokerOrderId(executionReport.getOrderID().getValue()))
+                            .brokerOrderId(new BrokerOrderId(executionReport.getExecID().getValue()))
                             .end()
             );
         } catch (FieldNotFound fnf) {

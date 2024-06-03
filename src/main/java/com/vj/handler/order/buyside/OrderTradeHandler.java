@@ -1,5 +1,6 @@
 package com.vj.handler.order.buyside;
 
+import com.vj.model.attribute.BrokerOrderId;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.service.OrderService;
@@ -47,9 +48,12 @@ public class OrderTradeHandler extends ExecutionReportHandler {
             services().orders().update(
                     // Create new version of order
                     equityOrder.update()
+                            .lastFillQty(executionReport.getLastQty().getValue())
+                            .lastFillPrice(executionReport.getLastPx().getValue())
                             .totalFillQty(executionReport.getCumQty().getValue())
                             .avgFillPrice(executionReport.getAvgPx().getValue())
                             .orderState(newOrderState)
+                            .brokerOrderId(new BrokerOrderId(executionReport.getExecID().getValue()))
                             .end()
             );
         } catch (FieldNotFound fnf) {

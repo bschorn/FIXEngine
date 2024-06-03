@@ -1,5 +1,6 @@
 package com.vj;
 
+import com.vj.mock.SellSideOrderFiller;
 import org.quickfixj.jmx.JmxExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,9 +137,12 @@ public class SellSide {
             SellSide sellSide = new SellSide(settings);
             sellSide.start();
 
+            SellSideOrderFiller filler = new SellSideOrderFiller(Assembly.services().orders());
+            filler.start();
+
             System.out.println("press <enter> to quit");
             System.in.read();
-
+            filler.shutdown();
             sellSide.stop();
         } catch (Exception e) {
             log.error(e.getMessage(), e);

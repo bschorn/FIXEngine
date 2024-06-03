@@ -8,18 +8,44 @@ import com.vj.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.SignStyle;
+import java.time.temporal.ChronoField;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoField.*;
 
 
 public class BuySideOrderServiceImpl implements OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(BuySideOrderServiceImpl.class);
 
-    private final AtomicLong nextOrderId = new AtomicLong(1000000);
+    private static final DateTimeFormatter DATE_NUM = new DateTimeFormatterBuilder()
+            .appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
+            .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+            .appendValue(ChronoField.DAY_OF_MONTH, 2)
+            .toFormatter();
+    private static final DateTimeFormatter TIME_NUM = new DateTimeFormatterBuilder()
+            .appendValue(HOUR_OF_DAY, 2)
+            .appendValue(MINUTE_OF_HOUR, 2)
+            .appendValue(SECOND_OF_MINUTE, 2)
+            .toFormatter();
+    private static final DateTimeFormatter ORDERID_NUM = new DateTimeFormatterBuilder()
+            .append(DATE_NUM)
+            .append(TIME_NUM)
+            .toFormatter();
+
+    private final AtomicLong nextOrderId = new AtomicLong(10);
 
     private final OrderPublishers orderPublishers;
-    private final Map<OrderId,LinkedList<Order>> orderHistoryMap = new HashMap<>();
+    private final Map<OrderId, LinkedList<Order>> orderHistoryMap = new HashMap<>();
     private final Map<ClientOrderId, Order> clientOrderMap = new HashMap<>();
 
     public BuySideOrderServiceImpl(OrderPublishers orderPublishers) {
@@ -28,7 +54,7 @@ public class BuySideOrderServiceImpl implements OrderService {
 
     @Override
     public OrderId nextId() {
-        return new OrderId(nextOrderId.getAndIncrement());
+        return new OrderId(Long.valueOf(LocalDateTime.now().format(ORDERID_NUM)));
     }
 
 
@@ -47,9 +73,8 @@ public class BuySideOrderServiceImpl implements OrderService {
 
     /**
      * Modify records the event and publishes.
-     *
+     * <p>
      * Modify is for changes that also need to be published to Broker.
-     *
      */
     @Override
     public void modify(Order order) {
@@ -66,9 +91,8 @@ public class BuySideOrderServiceImpl implements OrderService {
 
     /**
      * Update records the event received.
-     *
+     * <p>
      * Update is for changes that either came from the Broker or are not to be sent to the Broker.
-     *
      */
     @Override
     public void update(Order order) {
@@ -78,9 +102,15 @@ public class BuySideOrderServiceImpl implements OrderService {
         clientOrderMap.put(order.clientOrderId(), order);
     }
 
+    @Override
+    public List<Order> getOpenOrders() {
+        return clientOrderMap.values().stream()
+                .filter(o -> o.isOpen())
+                .collect(Collectors.toList());
+    }
+
     /**
      * Find the order using the OrderId key
-     *
      */
     @Override
     public Order find(OrderId orderId) {
@@ -93,7 +123,6 @@ public class BuySideOrderServiceImpl implements OrderService {
 
     /**
      * Find the order using the ClientOrderId key
-     *
      */
     @Override
     public Order find(ClientOrderId clientOrderId) {
@@ -102,7 +131,6 @@ public class BuySideOrderServiceImpl implements OrderService {
 
     /**
      * Get a events relating to an OrderId (all the versions/instances of Order for an OrderId)
-     *
      */
     @Override
     public List<Order> getHistory(OrderId orderId) {

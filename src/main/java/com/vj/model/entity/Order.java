@@ -36,6 +36,15 @@ public interface Order<M,U> {
     OrderAction orderAction();
     OrderState orderState();
     String error();
+    default boolean isOpen() {
+        switch (orderState()) {
+            case OPEN:
+            case PARTIAL:
+                return true;
+            default:
+                return false;
+        }
+    }
 
 
     /**

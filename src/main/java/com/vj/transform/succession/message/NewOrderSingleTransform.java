@@ -20,7 +20,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
     private final Services services;
     private final OrdTypeTransform ordTypeTransform;
     private final SideTransform sideTransform;
-    private final SecurityIDSourceTransform securityIDSourceTransform;
+    //private final SecurityIDSourceTransform securityIDSourceTransform;
     private final ExDestinationTransform exDestinationTransform;
     private final RoutStrategyTransform routStrategyTransform;
 
@@ -28,7 +28,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
         this.services = services;
         this.ordTypeTransform = transformers.field(OrdType.class);
         this.sideTransform = transformers.field(Side.class);
-        this.securityIDSourceTransform = transformers.field(SecurityIDSource.class);
+        //this.securityIDSourceTransform = transformers.field(SecurityIDSource.class);
         this.exDestinationTransform = transformers.field(ExDestination.class);
         this.routStrategyTransform = transformers.field(RoutStrategy.class);
     }
@@ -51,7 +51,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
                 .account(new com.vj.model.attribute.Account(newOrderSingle.getAccount().getValue()))
                 .orderType(ordTypeTransform.inbound(newOrderSingle.getOrdType()))
                 .side(sideTransform.inbound(newOrderSingle.getSide()))
-                .instrument(services.products().find(securityIDSourceTransform.inbound(newOrderSingle.getSecurityIDSource()), newOrderSingle.getSecurityID().getValue()))
+                .instrument(services.products().find(InstrumentSource.NASDAQ, newOrderSingle.getSymbol().getValue()))
                 .broker(exDestinationTransform.inbound(newOrderSingle.getExDestination()))
                 .orderQty(newOrderSingle.getOrderQty().getValue())
                 .limitPrice(newOrderSingle.getPrice().getValue())
@@ -76,8 +76,8 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
         message.set(exDestinationTransform.outbound(equityOrder.broker()));
         message.set(routStrategyTransform.outbound(equityOrder.execStrategy()));
         // optional
-        message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
-        message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));
+        //message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
+        //message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));
         message.set(new TimeInForce(TimeInForce.DAY));
         return message;
     }

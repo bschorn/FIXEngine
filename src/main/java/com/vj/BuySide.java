@@ -132,10 +132,10 @@ public class BuySide {
     private static InputStream getSettingsInputStream(String[] args) throws FileNotFoundException {
         InputStream inputStream = null;
         if (args.length == 0) {
-            inputStream = SellSide.class.getResourceAsStream(System.getProperty("settings.resource"));
+            inputStream = BuySide.class.getResourceAsStream(System.getProperty("settings.resource"));
         } else if (args.length >= 1) {
             String resourceName = args[0];
-            inputStream = SellSide.class.getResourceAsStream("/" + resourceName);
+            inputStream = BuySide.class.getResourceAsStream("/" + resourceName);
             if (inputStream == null) {
                 System.out.println("Resource " + resourceName + " not found. Attempt to load as a file.");
                 inputStream = new FileInputStream(resourceName);

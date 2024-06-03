@@ -114,12 +114,12 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
 
     @Override
     public double orderQty() {
-        return data.totFillQty;
+        return data.orderQty;
     }
 
     @Override
     public double limitPrice() {
-        return data.avgFillPrice;
+        return data.limitPrice;
     }
 
     @Override
@@ -134,12 +134,12 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
 
     @Override
     public double totFillQty() {
-        return 0;
+        return data.totFillQty;
     }
 
     @Override
     public double avgFillPrice() {
-        return 0;
+        return data.avgFillPrice;
     }
 
     @Override
@@ -483,6 +483,16 @@ public class EquityOrder implements Order<EquityOrder.OrderModifier, EquityOrder
 
         public OrderUpdater orderAction(OrderAction value) {
             data.orderAction = value;
+            return this;
+        }
+
+        public OrderUpdater lastFillQty(double value) {
+            data.latestFillQty = value;
+            return this;
+        }
+
+        public OrderUpdater lastFillPrice(double value) {
+            data.latestFillPrice = value;
             return this;
         }
 

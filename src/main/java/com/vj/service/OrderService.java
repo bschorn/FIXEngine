@@ -16,6 +16,8 @@ public interface OrderService {
     <T extends Order> T find(ClientOrderId clientOrderId) throws NoOrderFoundException;
     <T extends Order> List<T> getHistory(OrderId orderId) throws NoOrderFoundException;
 
+    List<Order> getOpenOrders();
+
     class NoOrderFoundException extends Exception {
         public NoOrderFoundException(String message) {
             super(message);
