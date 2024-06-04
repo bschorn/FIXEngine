@@ -1,5 +1,6 @@
 package com.vj.interactive;
 
+import com.vj.util.FIXPrettyPrint;
 import quickfix.*;
 
 public class IOListener implements Application {
@@ -32,6 +33,7 @@ public class IOListener implements Application {
     @Override
     public void toApp(Message message, SessionID sessionId) throws DoNotSend {
         System.out.println("<- " + message.toString());
+        System.out.println(FIXPrettyPrint.format((quickfix.fix42.Message) message));
     }
 
     @Override

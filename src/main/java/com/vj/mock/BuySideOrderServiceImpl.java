@@ -5,6 +5,7 @@ import com.vj.model.attribute.OrderId;
 import com.vj.model.entity.Order;
 import com.vj.publisher.OrderPublishers;
 import com.vj.service.OrderService;
+import com.vj.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,23 +28,6 @@ public class BuySideOrderServiceImpl implements OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(BuySideOrderServiceImpl.class);
 
-    private static final DateTimeFormatter DATE_NUM = new DateTimeFormatterBuilder()
-            .appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
-            .appendValue(ChronoField.MONTH_OF_YEAR, 2)
-            .appendValue(ChronoField.DAY_OF_MONTH, 2)
-            .toFormatter();
-    private static final DateTimeFormatter TIME_NUM = new DateTimeFormatterBuilder()
-            .appendValue(HOUR_OF_DAY, 2)
-            .appendValue(MINUTE_OF_HOUR, 2)
-            .appendValue(SECOND_OF_MINUTE, 2)
-            .toFormatter();
-    private static final DateTimeFormatter ORDERID_NUM = new DateTimeFormatterBuilder()
-            .append(DATE_NUM)
-            .append(TIME_NUM)
-            .toFormatter();
-
-    private final AtomicLong nextOrderId = new AtomicLong(10);
-
     private final OrderPublishers orderPublishers;
     private final Map<OrderId, LinkedList<Order>> orderHistoryMap = new HashMap<>();
     private final Map<ClientOrderId, Order> clientOrderMap = new HashMap<>();
@@ -54,7 +38,7 @@ public class BuySideOrderServiceImpl implements OrderService {
 
     @Override
     public OrderId nextId() {
-        return new OrderId(Long.valueOf(LocalDateTime.now().format(ORDERID_NUM)));
+        return new OrderId(IdGenerator.nextId());
     }
 
 

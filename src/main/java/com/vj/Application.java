@@ -13,16 +13,11 @@ import quickfix.FieldConvertError;
 import quickfix.FieldNotFound;
 import quickfix.IncorrectDataFormat;
 import quickfix.IncorrectTagValue;
-import quickfix.LogUtil;
 import quickfix.Message;
-import quickfix.MessageUtils;
 import quickfix.RejectLogon;
-import quickfix.Session;
 import quickfix.SessionID;
-import quickfix.SessionNotFound;
 import quickfix.SessionSettings;
 import quickfix.UnsupportedMessageType;
-import quickfix.field.ApplVerID;
 
 public class Application implements quickfix.Application {
 
