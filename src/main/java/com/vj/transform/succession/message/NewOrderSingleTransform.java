@@ -68,6 +68,7 @@ public class NewOrderSingleTransform implements MessageTransform<NewOrderSingle,
         // required
         message.set(new Account(equityOrder.account().asValue()));
         message.set(new ClOrdID(equityOrder.clientOrderId().asValue()));
+        message.set(new Rule80A(Rule80A.Day));
         message.set(new Symbol(equityOrder.instrument().toString()));
         message.set(sideTransform.outbound(equityOrder.side()));
         message.set(new OrderQty(equityOrder.orderQty()));

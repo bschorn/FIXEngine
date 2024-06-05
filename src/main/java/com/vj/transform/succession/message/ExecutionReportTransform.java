@@ -65,6 +65,7 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
         message.set(new ExecTransType('0')); // '0'-Normal
         message.set(new Symbol(equityOrder.instrument().toString()));
         message.set(sideTransform.outbound(equityOrder.side()));
+        message.set(new Rule80A(Rule80A.Day));
         //message.set(new SecurityID(equityOrder.instrument().get(InstrumentSource.SEDOL)));
         //message.set(securityIDSourceTransform.outbound(InstrumentSource.SEDOL));
         message.set(new OrderQty(equityOrder.orderQty()));

@@ -6,9 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="4f43777a-64e8-419a-8126-09f2223d0cec" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/interactive/IOListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/interactive/IOListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/mock/BuySideOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/mock/BuySideOrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/ExecutionReportTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/ExecutionReportTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/NewOrderSingleTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/NewOrderSingleTransform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/FIX44.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/BuySide.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/BuySide.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/SellSide.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/SellSide.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/Succession.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/Succession.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +80,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../quickfixj-2_3_1" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -155,7 +158,7 @@
       <workItem from="1716560555977" duration="5989000" />
       <workItem from="1716571112379" duration="76483000" />
       <workItem from="1717126467030" duration="436000" />
-      <workItem from="1717164608578" duration="47033000" />
+      <workItem from="1717164608578" duration="51092000" />
     </task>
     <servers />
   </component>
