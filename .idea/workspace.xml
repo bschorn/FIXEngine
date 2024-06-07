@@ -6,10 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4f43777a-64e8-419a-8126-09f2223d0cec" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/ExecutionReportTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/ExecutionReportTransform.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/util/FIXPrettyPrint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/util/FIXPrettyPrint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/FIX42.Succession.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/FIX42.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/Succession.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/Succession.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/Assembly.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/Assembly.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/model/attribute/OrderState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/model/attribute/OrderState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/field/OrdStatusTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/field/OrdStatusTransform.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,14 +98,14 @@
       <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\resources\Succession" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.vj.handler.order.buyside" />
       <recent name="com.vj.interactive" />
       <recent name="com.vj.transform.succession.field" />
       <recent name="com.vj.model.attribute" />
       <recent name="com.vj.publisher.sellside" />
-      <recent name="com.vj.transform.succession.message" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.BuySide">
+  <component name="RunManager" selected="Application.SSYSUAT">
     <configuration name="BuySide" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="11" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -156,7 +155,7 @@
       <workItem from="1716560555977" duration="5989000" />
       <workItem from="1716571112379" duration="76483000" />
       <workItem from="1717126467030" duration="436000" />
-      <workItem from="1717164608578" duration="59236000" />
+      <workItem from="1717164608578" duration="62179000" />
     </task>
     <servers />
   </component>
@@ -191,16 +190,6 @@
           <url>jar://$MAVEN_REPOSITORY$/org/quickfixj/quickfixj-core/2.3.1.0/quickfixj-core-2.3.1.0-sources.jar!/quickfix/DefaultSessionFactory.java</url>
           <line>258</line>
           <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$MAVEN_REPOSITORY$/org/quickfixj/quickfixj-core/2.3.1.0/quickfixj-core-2.3.1.0-sources.jar!/quickfix/DefaultSessionFactory.java</url>
-          <line>148</line>
-          <option name="timeStamp" value="90" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$MAVEN_REPOSITORY$/org/quickfixj/quickfixj-core/2.3.1.0/quickfixj-core-2.3.1.0-sources.jar!/quickfix/DefaultSessionFactory.java</url>
-          <line>153</line>
-          <option name="timeStamp" value="91" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -16,6 +16,7 @@ public enum OrderState implements Attribute<Integer> {
     REPLACE_REQ,
     REPLACE_SENT,
     REPLACE_PEND, // PendingReplace
+    REPLACED,
     UNKNOWN;
 
     @Override

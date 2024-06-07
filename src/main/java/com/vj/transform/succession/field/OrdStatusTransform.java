@@ -13,6 +13,7 @@ public class OrdStatusTransform implements FieldTransform<OrdStatus,OrderState> 
             NEW(OrdStatus.NEW, OrderState.OPEN),
             REJECTED(OrdStatus.REJECTED, OrderState.REJECTED),
             PENDING_CXL(OrdStatus.PENDING_CANCEL, OrderState.CANCEL_PEND),
+            REPLACED(OrdStatus.REPLACED, OrderState.REPLACED),
             CANCELED(OrdStatus.CANCELED, OrderState.CANCELED),
             PENDING_REP(OrdStatus.PENDING_REPLACE, OrderState.REPLACE_PEND),
             PARTIAL(OrdStatus.PARTIALLY_FILLED, OrderState.PARTIAL),

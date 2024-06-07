@@ -1,9 +1,7 @@
 package com.vj;
 
 import com.vj.handler.MessageHandlers;
-import com.vj.handler.order.buyside.OrderAcceptHandler;
-import com.vj.handler.order.buyside.OrderDefaultHandler;
-import com.vj.handler.order.buyside.OrderTradeHandler;
+import com.vj.handler.order.buyside.*;
 import com.vj.handler.order.sellside.NewOrderSingleHandler;
 import com.vj.handler.order.sellside.OrderCancelReplaceRequestHandler;
 import com.vj.handler.order.sellside.OrderCancelRequestHandler;
@@ -100,6 +98,8 @@ public class Assembly {
             INSTANCE.publishers.register(new OrderCancelReplaceRequestPublisher(INSTANCE.transformers.message(OrderCancelReplaceRequest.class)));
             INSTANCE.handlers.register(new OrderAcceptHandler(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.handlers.register(new OrderTradeHandler(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.handlers.register(new OrderReplaceAcceptHandler(INSTANCE.transformers.message(ExecutionReport.class)));
+            INSTANCE.handlers.register(new OrderCancelAcceptHandler(INSTANCE.transformers.message(ExecutionReport.class)));
             INSTANCE.handlers.register(new OrderDefaultHandler(INSTANCE.transformers.message(ExecutionReport.class)));
         }
     }
