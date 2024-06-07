@@ -60,6 +60,7 @@ public class ExecutionReportTransform implements MessageTransform<ExecutionRepor
         message.set(ordStatusTransform.outbound(equityOrder.orderState()));
         message.set(new OrderID(equityOrder.id().toString()));
         message.set(new ClOrdID(equityOrder.clientOrderId().asValue()));
+        message.set(new SecondaryClOrdID("unset"));
         message.set(new ExecID(UUID.randomUUID().toString()));
         message.set(new ExecBroker(equityOrder.broker().asValue()));
         message.set(new ExecTransType('0')); // '0'-Normal

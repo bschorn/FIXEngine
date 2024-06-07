@@ -53,7 +53,7 @@ public class FIXPrettyPrint {
             new MinQty(),
             new MaxFloor(),
             new LocateReqd(),
-            new PegDifference(),
+            new PegOffsetValue(),
             new DiscretionOffsetValue(),
             new LocateBroker(),
             new ClientInfo(),

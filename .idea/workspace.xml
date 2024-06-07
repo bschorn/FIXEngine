@@ -7,10 +7,8 @@
     <list default="true" id="4f43777a-64e8-419a-8126-09f2223d0cec" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/ExecutionReportTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/ExecutionReportTransform.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/NewOrderSingleTransform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/transform/succession/message/NewOrderSingleTransform.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/FIX44.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/BuySide.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/BuySide.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/SellSide.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/SellSide.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/vj/util/FIXPrettyPrint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/vj/util/FIXPrettyPrint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/FIX42.Succession.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/FIX42.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Succession/Succession.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Succession/Succession.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,7 +78,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/Succession" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -89,8 +87,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\main\resources" />
       <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\main\resources\Succession" />
+      <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\main\resources" />
       <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\resources\Succession" />
       <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\resources" />
       <recent name="B:\bschorn\Documents\GitHub\FIXEngine\src\main\java\com\vj\handler\order\sellside" />
@@ -158,7 +156,7 @@
       <workItem from="1716560555977" duration="5989000" />
       <workItem from="1716571112379" duration="76483000" />
       <workItem from="1717126467030" duration="436000" />
-      <workItem from="1717164608578" duration="51092000" />
+      <workItem from="1717164608578" duration="59236000" />
     </task>
     <servers />
   </component>
@@ -188,6 +186,21 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/vj/mock/SellSideOrderFiller.java</url>
           <line>36</line>
           <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/quickfixj/quickfixj-core/2.3.1.0/quickfixj-core-2.3.1.0-sources.jar!/quickfix/DefaultSessionFactory.java</url>
+          <line>258</line>
+          <option name="timeStamp" value="89" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/quickfixj/quickfixj-core/2.3.1.0/quickfixj-core-2.3.1.0-sources.jar!/quickfix/DefaultSessionFactory.java</url>
+          <line>148</line>
+          <option name="timeStamp" value="90" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/quickfixj/quickfixj-core/2.3.1.0/quickfixj-core-2.3.1.0-sources.jar!/quickfix/DefaultSessionFactory.java</url>
+          <line>153</line>
+          <option name="timeStamp" value="91" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
