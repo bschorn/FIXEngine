@@ -62,19 +62,13 @@ public class Assembly {
         }
         handlers = new MessageHandlers();
         services = new Services(clients, orders, products, markets);
-        // transformers - fields
-        transformers.register(new com.vj.transform.succession.field.OrdStatusTransform());
-        transformers.register(new com.vj.transform.succession.field.OrdTypeTransform());
-        transformers.register(new com.vj.transform.succession.field.SideTransform());
-        transformers.register(new com.vj.transform.succession.field.SecurityIDSourceTransform());
-        transformers.register(new com.vj.transform.succession.field.ExDestinationTransform());
-        transformers.register(new com.vj.transform.succession.field.RoutStrategyTransform());
-        // transformers - messages
-        transformers.register(new com.vj.transform.succession.message.NewOrderSingleTransform(services, transformers));
-        transformers.register(new com.vj.transform.succession.message.OrderCancelRequestTransform(services, transformers));
-        transformers.register(new com.vj.transform.succession.message.OrderCancelReplaceRequestTransform(services, transformers));
-        transformers.register(new com.vj.transform.succession.message.OrderCancelRejectTransform(services, transformers));
-        transformers.register(new com.vj.transform.succession.message.ExecutionReportTransform(services, transformers));
+
+        String broker = System.getProperty("broker");
+        if (broker.equalsIgnoreCase("IBKR")) {
+            com.vj.brokers.ibkr.TransformAssembly.assemble(services, transformers);
+        } else if (broker.equalsIgnoreCase("Succession")) {
+            com.vj.brokers.succession.TransformAssembly.assemble(services, transformers);
+        }
         // validators - messages
         //validators.register(NewOrderSingle.class, new NewOrderSingleValidator());
         //validators.register(OrderCancelReplaceRequest.class, new OrderCancelReplaceRequestValidator());

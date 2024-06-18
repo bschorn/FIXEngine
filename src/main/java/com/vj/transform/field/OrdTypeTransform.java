@@ -1,4 +1,4 @@
-package com.vj.transform.succession.field;
+package com.vj.transform.field;
 
 import com.vj.model.attribute.OrderType;
 import com.vj.transform.NoTransformationException;

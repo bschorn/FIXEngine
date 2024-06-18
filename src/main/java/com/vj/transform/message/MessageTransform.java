@@ -1,4 +1,4 @@
-package com.vj.transform.succession.message;
+package com.vj.transform.message;
 
 import com.vj.service.ClientService;
 import com.vj.service.OrderService;

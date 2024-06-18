@@ -1,10 +1,9 @@
-package com.vj.transform.succession.field;
+package com.vj.brokers.succession.field;
 
 import com.vj.manager.SessionManager;
-import com.vj.model.attribute.Broker;
 import com.vj.model.attribute.ExecStrategy;
 import com.vj.transform.NoTransformationException;
-import quickfix.field.ExDestination;
+import com.vj.transform.field.FieldTransform;
 import quickfix.field.RoutStrategy;
 
 

@@ -5,12 +5,11 @@ import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.service.OrderService;
-import com.vj.transform.succession.message.OrderCancelRequestTransform;
+import com.vj.transform.message.OrderCancelRequestTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.FieldNotFound;
 import quickfix.SessionID;
-import quickfix.fix42.OrderCancelReplaceRequest;
 import quickfix.fix42.OrderCancelRequest;
 
 public class OrderCancelRequestHandler implements MessageHandler<OrderCancelRequest> {

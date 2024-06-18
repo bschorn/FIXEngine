@@ -6,7 +6,7 @@ import com.vj.model.attribute.OrderAction;
 import com.vj.model.attribute.OrderState;
 import com.vj.model.entity.EquityOrder;
 import com.vj.service.OrderService;
-import com.vj.transform.succession.message.OrderCancelReplaceRequestTransform;
+import com.vj.transform.message.OrderCancelReplaceRequestTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.FieldNotFound;

@@ -1,7 +1,8 @@
-package com.vj.transform.succession.field;
+package com.vj.brokers.succession.field;
 
 import com.vj.model.attribute.OrderState;
 import com.vj.transform.NoTransformationException;
+import com.vj.transform.field.FieldTransform;
 import quickfix.field.OrdStatus;
 
 import java.util.HashMap;

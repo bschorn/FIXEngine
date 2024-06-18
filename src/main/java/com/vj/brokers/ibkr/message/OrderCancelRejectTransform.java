@@ -1,4 +1,4 @@
-package com.vj.transform.succession.message;
+package com.vj.brokers.ibkr.message;
 
 import com.vj.model.attribute.ClientOrderId;
 import com.vj.model.entity.EquityOrder;
@@ -6,8 +6,9 @@ import com.vj.service.OrderService;
 import com.vj.service.Services;
 import com.vj.transform.NoTransformationException;
 import com.vj.transform.Transformers;
-import com.vj.transform.succession.field.OrdStatusTransform;
-import com.vj.transform.succession.field.SideTransform;
+import com.vj.transform.field.OrdStatusTransform;
+import com.vj.transform.field.SideTransform;
+import com.vj.transform.message.MessageTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.FieldNotFound;

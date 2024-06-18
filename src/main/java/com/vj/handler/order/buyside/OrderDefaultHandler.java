@@ -1,6 +1,6 @@
 package com.vj.handler.order.buyside;
 
-import com.vj.transform.succession.message.MessageTransform;
+import com.vj.transform.message.MessageTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

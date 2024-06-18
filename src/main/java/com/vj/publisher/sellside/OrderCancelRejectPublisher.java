@@ -5,7 +5,7 @@ import com.vj.model.entity.EquityOrder;
 import com.vj.publisher.OrderPublisher;
 import com.vj.service.OrderService;
 import com.vj.transform.NoTransformationException;
-import com.vj.transform.succession.message.OrderCancelRejectTransform;
+import com.vj.transform.message.OrderCancelRejectTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.field.CxlRejReason;
